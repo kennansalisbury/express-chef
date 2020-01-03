@@ -15,7 +15,6 @@ router.post('/login', passport.authenticate('local', {
     successFlash: 'Yay, we logged in!',
     failureRedirect: '/auth/login',
     failureFlash: 'Invalid credentials'
-
 }))
 
 router.get('/signup', (req, res) => {
@@ -72,6 +71,34 @@ router.get('/logout', (req, res) => {
     res.redirect('/')
 })
 
+// GITHUB LOGIN ROUTES
+
+//route that our app uses:
+router.get('/github', passport.authenticate('github'))
+
+//route github uses (callback url):
+router.get('/callback/github', passport.authenticate('github', {
+    successRedirect: '/profile',
+    successFlash: 'Github login successful',
+    failureRedirect: '/auth/login',
+    failureFlash: 'Github login failed'
+}))
+
+
+// FACEBOOK LOGIN ROUTES
+
+//route that our app uses:
+router.get('/facebook', passport.authenticate('facebook', {
+    scope: ['public_profile', 'email', 'user_birthday']
+}))
+
+//route github uses (callback url):
+router.get('/callback/facebook', passport.authenticate('facebook', {
+    successRedirect: '/profile',
+    successFlash: 'Facebook login successful',
+    failureRedirect: '/auth/login',
+    failureFlash: 'Facebook login failed'
+}))
 
 // Export the router object so we can include it in other files
 module.exports = router
