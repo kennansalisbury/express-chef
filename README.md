@@ -59,6 +59,14 @@ This is boilerplate code for user auth created for use in my future projects. No
 git clone <repo_link> <new_name>
 ```
 
+#### Extra step for OAuth
+
+Swith to the `with-oauth` branch
+
+```
+git checkout with-oauth
+```
+
 #### 2. npm install node modules in package.json
 
 ```
