@@ -18,25 +18,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      username: {
-        type: Sequelize.STRING
-      },
-      birthdate: {
-        type: Sequelize.DATE
-      },
       password: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      photoURL: {
+      facebookId: {
         type: Sequelize.STRING
       },
-      bio: {
-        type: Sequelize.TEXT
+      facebookToken: {
+        type: Sequelize.STRING
       },
-      admin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+      photoUrl: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

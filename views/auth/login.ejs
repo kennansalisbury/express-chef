@@ -1,28 +1,19 @@
 <h1>Log In Here</h1>
 
-<div class="row">
-    <form method="POST" action="/auth/login" class="col s12"> 
-        <div class="row">
-            <div class="input-field col s12">
-              <input id="email" type="email" class="validate" name="email">
-              <label for="email">Email</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-              <input id="password" type="password" class="validate" name="password">
-              <label for="password">Password</label>
-            </div>
-        </div>
-        <button class="btn waves-effect waves-light #80d8ff light-blue darken-3" type="submit" name="action">Log In
-            <i class="material-icons right">send</i>
-        </button>
-    </form>
-</div>
+<form method="POST" action="/auth/login"> 
+              
+    <input id="email" type="email" class="validate" name="email">
+    <label for="email">Email</label>
+
+    <input id="password" type="password" class="validate" name="password">
+    <label for="password">Password</label>
+  
+    <button type="submit" name="action">Log In</button>
+</form>
+
 
 <hr>
 
 <h2>Or...</h2>
 
-<a href="/auth/github" class="btn waves-effect waves-light grey darken-2">Github Login <i class="fa fa-github" aria-hidden="true"></i> </a>
-<a href="/auth/facebook" class="btn">Facebook Login <i class="fa fa-facebook" aria-hidden="true"></i> </a>
+<a href="/auth/facebook" >Facebook Login </a>

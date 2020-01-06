@@ -46,6 +46,6 @@ app.get('*', (req, res) => {
 })
 
 // Listen on local port
-app.listen(process.env.PORT || 8000, () => { //process.env.PORT is for when pushing to production the server will automatically generate a port in env file to use
+app.listen(process.env.PORT || 3000, () => { //process.env.PORT is for when pushing to production the server will automatically generate a port in env file to use
     console.log('👂🏻👂🏻👂🏻👂🏻')
 })

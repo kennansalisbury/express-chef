@@ -71,20 +71,6 @@ router.get('/logout', (req, res) => {
     res.redirect('/')
 })
 
-// GITHUB LOGIN ROUTES
-
-//route that our app uses:
-router.get('/github', passport.authenticate('github'))
-
-//route github uses (callback url):
-router.get('/callback/github', passport.authenticate('github', {
-    successRedirect: '/profile',
-    successFlash: 'Github login successful',
-    failureRedirect: '/auth/login',
-    failureFlash: 'Github login failed'
-}))
-
-
 // FACEBOOK LOGIN ROUTES
 
 //route that our app uses:

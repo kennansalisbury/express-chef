@@ -3,7 +3,6 @@ require('dotenv').config()
 
 // Require passport and any passport strategies you wish to use
 let passport = require('passport')
-let GithubStrategy = require('passport-github2').Strategy
 let FacebookStrategy = require('passport-facebook').Strategy
 let LocalStrategy = require('passport-local').Strategy //using uppercase because this is a Class
 
@@ -51,41 +50,6 @@ passport.use(new LocalStrategy({
     .catch(cb)
 }))
 
-//Implement Github Strategy
-passport.use(new GithubStrategy ({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_SECRET,
-    callbackURL: process.env.BASE_URL + '/auth/callback/github' //this is path we will create for github to send back data
-}, (accessToken, refreshToken, profile, cb) => {
-    let name = profile.username.split(' ')
-    db.user.findOrCreate({
-        where: { githubId: profile.id },
-        defaults: {
-            githubToken: accessToken,
-            firstname: name[0] || profile.username,
-            lastname: name[name.length - 1],
-            username: profile.username,
-            photoURL: profile._json.avatar_url,
-            bio: profile._json.bio || `Github user ${profile.username} works at ${profile._json.company} in ${profile._json.location}`
-        }
-    })
-    .then(([user, wasCreated]) => {
-        // Find out if user was already a github user. If so, need a new token
-        if (!wasCreated && user.githubId) {
-            user.update({
-                githubToken: accessToken
-            })
-            .then(updatedUser => {
-                cb(null, updatedUser)
-            })
-            .catch(cb)
-        } else {
-            //newly created user, or not a previous GH user
-            return cb(null, user)
-        }
-    })
-    .catch(cb)
-}))
 
 //Implement Facebook Strategy
 passport.use(new FacebookStrategy({
