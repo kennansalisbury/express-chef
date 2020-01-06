@@ -1,82 +1,25 @@
 <h1>Sign Up Here</h1>
+    
+<form method="POST" action="/auth/signup" > 
+
+  <input id="firstname" type="text" class="validate" name="firstname" value="<%=data.firstname%>">
+  <label for="firstname">First Name</label>
 
 
-<div class="row">
-    <form method="POST" action="/auth/signup" class="col s12"> 
-        <div class="row">
-            <div class="input-field col s6">
-              <input id="firstname" type="text" class="validate" name="firstname" value="<%=data.firstname%>">
-              <label for="firstname">First Name</label>
-            </div>
-            <div class="input-field col s6">
-              <input id="lastname" type="text" class="validate" name="lastname" value="<%=data.lastname%>">
-              <label for="lastname">Last Name</label>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="input-field col s4">
-              <input id="email" type="email" class="validate" name="email" value="<%=data.email%>">
-              <label for="email">Email</label>
-            </div>
+  <input id="lastname" type="text" class="validate" name="lastname" value="<%=data.lastname%>">
+  <label for="lastname">Last Name</label>
 
-          <div class="input-field col s4">
-            <input id="username" type="text" class="validate" name="username" value="<%=data.username%>">
-            <label for="username">Username</label>
-          </div>
 
-          <div class="input-field col s4">
-            <input id="birthdate" type="text" class="datepicker validate" name="birthdate" value="<%=data.birthdate%>">
-            <label for="birthdate">Birthday</label>
-          </div>
-        </div>
-        
-        <div class="row">
-            <div class="input-field col s12">
-              <input id="password" type="password" class="validate" name="password">
-              <label for="password">Password</label>
-            </div>
-        </div>
+  <input id="email" type="email" class="validate" name="email" value="<%=data.email%>">
+  <label for="email">Email</label>
+  
+  <input id="password" type="password" class="validate" name="password">
+  <label for="password">Password</label>
 
-        <div class="row">
-            <div class="input-field col s12">
-              <input id="ver_password" type="password" class="validate" name="ver_password">
-              <label for="ver_password">Verify Password</label>
-            </div>
-        </div>
+  <input id="ver_password" type="password" class="validate" name="ver_password">
+  <label for="ver_password">Verify Password</label>
 
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="photoURL" type="url" class="validate" name="photoURL" value="<%=data.photoURL%>">
-            <label for="photoURL">Profile Pic</label>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="bio" class="validate materialize-textarea" name="bio"><%= data.bio %></textarea>
-            <label for="bio">User Bio</label>
-          </div>
-        </div>
-
-        <button class="btn waves-effect waves-light #80d8ff light-blue darken-3" type="submit">Sign Up
-            <i class="material-icons right">send</i>
-        </button>
-    </form>
-</div>
-
-<script>//frontend javascript
-  document.addEventListener('DOMContentLoaded', function() {
-    let elems = document.querySelectorAll('.datepicker')
-    let startDate = new Date()
-    startDate.setFullYear(startDate.getFullYear() - 30)
-    let instances = M.Datepicker.init(elems, {
-      autoClose: true,
-      defaultDate: startDate,
-      minYear: startDate.getFullYear() - 70,
-      maxYear: (new Date()).getFullYear()
-    })
-  })
-</script>
+  <button type="submit">Sign Up</button>
+</form>
 
   

@@ -9,9 +9,6 @@
           <li><a href="/auth/login">Login</a></li>
         <% } else {%>
           <li>Hi <%= user.firstname %></li>
-          <% if (user.admin) {%>
-            <li><a href="profile/admin">Admin</a></li>
-          <%}%>
           <li><a href="/">Home</a></li>
           <li><a href="/profile">Profile</a></li>
           <li><a href="/auth/logout">Log Out</a></li>

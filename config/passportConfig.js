@@ -1,5 +1,9 @@
+//Read ENV Values
+require('dotenv').config()
+
 // Require passport and any passport strategies you wish to use
 let passport = require('passport')
+let FacebookStrategy = require('passport-facebook').Strategy
 let LocalStrategy = require('passport-local').Strategy //using uppercase because this is a Class
 
 // Reference the models folder to access the database
@@ -24,7 +28,6 @@ passport.deserializeUser((id, cb) => {
 })
 
 // Implement the Local Strategy (local database)
-
 //this will tell us if information entered is correct
 passport.use(new LocalStrategy({
     usernameField: 'email',
@@ -45,6 +48,50 @@ passport.use(new LocalStrategy({
         }
     })
     .catch(cb)
+}))
+
+
+//Implement Facebook Strategy
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_SECRET,
+    callbackURL: process.env.BASE_URL + '/auth/callback/facebook',
+    profileFields: ['id', 'email', 'displayName', 'photos', 'birthday']
+}, (accessToken, refreshToken, profile, cb) => {
+    //grab facebook primary email
+    let facebookEmail = profile.emails[0].value
+    let displayName = profile.displayName.split(' ')
+    let photo = profile.photos.length ? profile.photos[0].value : 'ttp://place-puppy.com/200x200'
+
+    //look for email in local database - do not duplicate
+    db.user.findOrCreate({
+        where: {email: facebookEmail},
+        defaults: {
+            facebookToken: accessToken,
+            facebookId: profile.id,
+            firstname: displayName[0],
+            lastname: displayName[displayName.length - 1],
+            username:  profile.username || displayName[0],
+            photoURL: photo,
+            birthdate: profile._json.birthday,
+            bio: `${profile.displayName} created this account with Facebook`
+        }
+    })
+    .then(([user, wasCreated]) => {
+        if (wasCreated || user.facebookId) { //new user created, not found already in local database
+            cb(null, user)
+        } else { //we found an existing user (add FB id and token)
+            user.update({
+                facebookId: profile.id,
+                facebookToken: accessToken
+            })
+            .then(updatedUser => {
+                cb(null, updatedUser)
+            })
+            .catch(cb)
+        }
+    })
+        .catch(cb)
 }))
 
 module.exports = passport
