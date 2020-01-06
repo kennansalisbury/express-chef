@@ -1,4 +1,3 @@
-let axios = require('axios')
 let router = require('express').Router()
 let isLoggedIn = require('../middleware/isLoggedIn')
 

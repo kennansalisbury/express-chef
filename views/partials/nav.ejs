@@ -1,18 +1,14 @@
-<nav class="#80d8ff light-blue darken-3">
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo">KS</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        
-        <% if(!user) { %>
-          <li><a href="/">Home</a></li>
-          <li><a href="/auth/signup">Sign Up</a></li>
-          <li><a href="/auth/login">Login</a></li>
-        <% } else {%>
-          <li>Hi <%= user.firstname %></li>
-          <li><a href="/">Home</a></li>
-          <li><a href="/profile">Profile</a></li>
-          <li><a href="/auth/logout">Log Out</a></li>
-        <%}%>
-      </ul>
-    </div>
+<nav>
+  
+  <% if(!user) { %>
+    <li><a href="/">Home</a></li>
+    <li><a href="/auth/signup">Sign Up</a></li>
+    <li><a href="/auth/login">Login</a></li>
+  <% } else {%>
+    <li>Hi <%= user.firstname %></li>
+    <li><a href="/">Home</a></li>
+    <li><a href="/profile">Profile</a></li>
+    <li><a href="/auth/logout">Log Out</a></li>
+  <%}%>
+
   </nav>
