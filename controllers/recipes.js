@@ -225,7 +225,8 @@ router.post('/', (req, res) => {
     })
     .then(([recipe, wasCreated]) => {
         console.log(wasCreated? recipe.title + ' was created' : recipe.title + ' was already found')
-        res.redirect('/recipes')
+        
+        res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
     })
     .catch(err => {
         console.log(err)
@@ -245,6 +246,28 @@ router.get('/', (req, res) => {
         res.render('error')
     })
 })
+
+
+// GET /recipes/:id - show 1 saved recipe
+router.get('/:id', (req, res) => {
+    let recipeWasCreated
+    
+    if(req.query.wasCreated) {
+        recipeWasCreated = req.query.wasCreated
+    }
+
+    db.recipe.findByPk(req.params.id)
+    .then(recipe => {
+        res.render('recipes/show.ejs', {recipe, recipeWasCreated})
+    })
+})
+
+
+module.exports = router
+
+
+
+
 
 
 //GET /recipes/:id/save - form for saving recipe
@@ -270,14 +293,3 @@ router.get('/', (req, res) => {
 //     // })
 
 // })
-
-// GET /recipes/:id - show 1 saved recipe
-router.get('/:id', (req, res) => {
-    db.recipe.findByPk(req.params.id)
-    .then(recipe => {
-        res.render('recipes/show.ejs', {recipe})
-    })
-})
-
-
-module.exports = router

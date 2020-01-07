@@ -2,6 +2,4 @@
 
 <% recipes.forEach(recipe => { %>
     <h2><%= recipe.title  %> </h2>
-    <% let ingredients = JSON.parse(recipe.ingredients) %>
-    <p><%= ingredients[0].text %></p>
 <% }) %>
