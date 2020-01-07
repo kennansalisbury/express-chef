@@ -1,10 +1,17 @@
 <h1>View all Search Results</h1>
 
+<!-- FOR TESTING W/ NO API -->
+<form method="GET" action="/recipes/search/result">
+    <input type="submit" value="View">
+</form>
+<!-- FOR TESTING W/ NO API -->
 
-<% recipes.forEach(recipe => { %>
-    <h2><%= recipe.recipe.label %></h2>
-    <form method="GET" action="/recipes/test">
-        <input type="hidden" name="url" value="<%= recipe.recipe.uri %>">
-        <input type="submit" value="View">
-    </form>
-<% }) %>
+<% if(recipes) {%>
+    <% recipes.forEach(recipe => { %>
+        <h2><%= recipe.recipe.label %></h2>
+        <form method="GET" action="/recipes/search/result">
+            <input type="hidden" name="url" value="<%= recipe.recipe.uri %>">
+            <input type="submit" value="View">
+        </form>
+    <% }) %>
+<%}%>

@@ -1,1 +1,58 @@
+<% let cookPrepTime = recipe.totalTime ? recipe.totalTime : time %>
+
 <h1>Show 1 Recipe from Search Results</h1>
+
+<h2><%= recipe.label %></h2>
+
+<p><%= instructionsText %></p>
+
+<p><%= cookPrepTime %></p>
+
+<button id='save-btn' href="#save">Save Recipe</button>
+
+<form id="save-form" method="POST" action="/recipes">
+    <input type="hidden" name="title" value="<%= recipe.label %>">
+    <input type="hidden" name="source" value="<%= recipe.source %>">
+    <input type="hidden" name="sourceUrl" value="<%= recipe.url %>">
+    <input type="hidden" name="imageUrl" value="<%= recipe.image %>">
+    <input type="hidden" name="time" value="<%= cookPrepTime %>">
+    <input type="hidden" name="servings" value="<%= recipe.yield %>">
+    <input type="hidden" name="ingredientsText" value="<%= recipe.ingredientLines %>">
+    <input type="hidden" name="ingredients" value="<%= recipe.ingredients %>">
+    <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
+    <input type="hidden" name="instructions" value="<%= instructionsObj%>">
+    <input type="hidden" name="type" value="<%= type %>">
+    <input type="hidden" name="diet" value="<%= recipe.dietLabels[0] %>">
+    <input type="hidden" name="health" value="<%= recipe.healthLabels[0] %>">
+
+    <div id="add-categories" class="hide">
+        <h3>Categorize (optional):</h3>
+
+        <h4>Existing categories:</h4>
+        
+        <% categories.forEach(category => { %>
+            <input type="checkbox" name="name" value="<%=category.name%>">
+            <label><%=category.name%></label>
+        <% }) %>
+
+        <h4>Add your own</h4>
+
+    </div>
+
+    <input type="submit" id="submit-btn" class="hide">
+
+</form>
+
+<script>
+    document.getElementById('save-btn').addEventListener('click', () => {
+        if(document.getElementById('add-categories').getAttribute('class') === 'hide'){
+            document.getElementById('add-categories').setAttribute('class', 'show')
+            document.getElementById('submit-btn').setAttribute('class', 'show')
+            document.getElementById('save-btn').textContent = 'Hide'
+        } else {
+            document.getElementById('add-categories').setAttribute('class', 'hide')
+            document.getElementById('submit-btn').setAttribute('class', 'hide')
+            document.getElementById('save-btn').textContent = 'Save Recipe'
+        }
+    })
+</script>
