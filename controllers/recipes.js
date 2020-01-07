@@ -204,9 +204,33 @@ db.category.findAll()
 
 //POST /recipes - save a recipe to db
 router.post('/', (req, res) => {
-    //take req.body.source and pass through spoonacular, then extract & save instructions as instructions
-    
-    res.send('POST route for saving recipes')
+    db.recipe.findOrCreate({
+        where: {
+            sourceUrl: req.body.sourceUrl,
+        },
+        defaults: {
+            title: req.body.title,
+            source: req.body.source,
+            imageUrl: req.body.imageUrl,
+            time: req.body.time,
+            servings: req.body.servings,
+            ingredientsText: req.body.ingredientsText,
+            ingredients: req.body.ingredients,
+            instructionsText: req.body.instructionsText,
+            instructions: req.body.instructions,
+            type: req.body.type,
+            diet: req.body.diet,
+            health: req.body.health
+        }
+    })
+    .then(([recipe, wasCreated]) => {
+        console.log(wasCreated? recipe.title + ' was created' : recipe.title + ' was already found')
+        res.redirect('/recipes')
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
 })
 
 //GET /recipes - show all saved recipes

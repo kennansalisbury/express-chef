@@ -6,6 +6,9 @@
 
 <p><%= instructionsText %></p>
 
+<p>Ingredients:</p>
+<p><%= recipe.ingredients[0].text%> </p>
+
 <p><%= cookPrepTime %></p>
 
 <button id='save-btn' href="#save">Save Recipe</button>
@@ -18,9 +21,9 @@
     <input type="hidden" name="time" value="<%= cookPrepTime %>">
     <input type="hidden" name="servings" value="<%= recipe.yield %>">
     <input type="hidden" name="ingredientsText" value="<%= recipe.ingredientLines %>">
-    <input type="hidden" name="ingredients" value="<%= recipe.ingredients %>">
+    <input type="hidden" name="ingredients" value="<%= JSON.stringify(recipe.ingredients) %>">
     <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
-    <input type="hidden" name="instructions" value="<%= instructionsObj%>">
+    <input type="hidden" name="instructions" value="<%= JSON.stringify(instructionsObj)%>">
     <input type="hidden" name="type" value="<%= type %>">
     <input type="hidden" name="diet" value="<%= recipe.dietLabels[0] %>">
     <input type="hidden" name="health" value="<%= recipe.healthLabels[0] %>">
@@ -39,7 +42,7 @@
 
     </div>
 
-    <input type="submit" id="submit-btn" class="hide">
+    <input type="submit" id="submit-btn" class="hide" value="Save Recipe">
 
 </form>
 
