@@ -32,8 +32,11 @@ module.exports = {
       ingredients: {
         type: Sequelize.JSONB
       },
-      instructions: {
+      instructionsText: {
         type: Sequelize.TEXT
+      },
+      instructions: {
+        type: Sequelize.JSONB
       },
       type: {
         type: Sequelize.STRING

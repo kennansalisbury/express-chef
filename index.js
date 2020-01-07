@@ -37,7 +37,6 @@ app.use('/categories', require('./controllers/categories'))
 
 // Add home or catch-all routes
 app.get('/', (req, res) => {
-    // res.send('<h1>Hello World</h1>')
     res.render('home')
 })
 

@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     servings: DataTypes.INTEGER,
     ingredientsText: DataTypes.TEXT,
     ingredients: DataTypes.JSONB,
-    instructions: DataTypes.TEXT,
+    instructionsText: DataTypes.TEXT,
+    instructions: DataTypes.JSONB,
     type: DataTypes.STRING,
     diet: DataTypes.STRING,
     health: DataTypes.STRING

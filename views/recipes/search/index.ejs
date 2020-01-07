@@ -1,0 +1,10 @@
+<h1>View all Search Results</h1>
+
+
+<% recipes.forEach(recipe => { %>
+    <h2><%= recipe.recipe.label %></h2>
+    <form method="GET" action="/recipes/test">
+        <input type="hidden" name="url" value="<%= recipe.recipe.uri %>">
+        <input type="submit" value="View">
+    </form>
+<% }) %>
