@@ -1,70 +1,98 @@
 <% let cookPrepTime = recipe.totalTime ? recipe.totalTime : time %>
 
-<h1>Show 1 Recipe from Search Results</h1>
+<h1><%= recipe.label %></h1>
+<h3 class="source"><a class="text-info" href="<%= recipe.url %>"><%= recipe.source %></a></h3>
 
-<h2><%= recipe.label %></h2>
-
-<p><%= instructionsText %></p>
-
-<p>Ingredients:</p>
-<p><%= recipe.ingredients[0].text%> </p>
-
-<p><%= cookPrepTime %></p>
-
-<button id='save-btn' href="#save">Save Recipe</button>
-
-<form id="save-form" method="POST" action="/recipes">
-    <input type="hidden" name="title" value="<%= recipe.label %>">
-    <input type="hidden" name="source" value="<%= recipe.source %>">
-    <input type="hidden" name="sourceUrl" value="<%= recipe.url %>">
-    <input type="hidden" name="imageUrl" value="<%= recipe.image %>">
-    <input type="hidden" name="time" value="<%= cookPrepTime %>">
-    <input type="hidden" name="servings" value="<%= recipe.yield %>">
-    <input type="hidden" name="ingredients" value="<%= JSON.stringify(recipe.ingredients) %>">
-    <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
-    <input type="hidden" name="instructions" value="<%= JSON.stringify(instructionsObj)%>">
-    <input type="hidden" name="types" value="<%= JSON.stringify(types) %>">
-    <input type="hidden" name="diet" value="<%= JSON.stringify(recipe.dietLabels) %>">
-    <input type="hidden" name="health" value="<%= JSON.stringify(recipe.healthLabels) %>">
-    <input type="hidden" name="calories" value="<%= recipe.calories %>">
-
-    <div id="add-categories" class="hide">
-        <h3>Categorize (optional):</h3>
+<ul class="list-group list-group-horizontal mb-3">
+    <li class="list-group-item">
+    <% for (let x=0; x < recipe.yield; x++) {%>
+            <i class="fas fa-user"></i>
+            <%}%>
+        Serves <strong><%=recipe.yield%></strong> ppl
+    </li>
+  <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= cookPrepTime %></strong> minutes</li>
+  <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
+</ul>
 
 
-        <% if (categories) {%>
-            <h4>Existing categories:</h4>
-            
-            <% categories.forEach(category => { %>
-                <input type="checkbox" name="existing_categories" value="<%=category.name%>">
-                <label><%=category.name%></label>
-            <% }) %>
-
-            <h4>Add your own categories</h4>
-
-        <%} else {%>
-        <h4> You don't have any categories stored yet, start by adding some new ones below!</h4>
-        <%}%>
-
-        <label>Add categories by submitting below. Categories should be separated by commas.</label>
-        <input type="text" name="new_categories" placeholder="i.e. breakfast, lunch, dinner, etc. ">
-
+<div class="row">
+    <div class="col-sm one-recipe-img">
+        <img class="img-fluid p-2" src="<%=recipe.image %>">
     </div>
 
-    <input type="submit" id="submit-btn" class="hide" value="Save Recipe">
+    <div class="col-8 ingredients">
+        <h4>Ingredients</h4>
+        <% recipe.ingredients.forEach(ingredient => {%>
+            <p><%=ingredient.text%></p>
+        <%})%>
+    </div>    
+</div>
 
-</form>
+<div class="container">
+    <h4>Instructions</h4>
+    <% instructionsObj[0].steps.forEach(step => {%>
+        <p><%=step.number%>. <%=step.step%></p>
+    <%})%>
+</div>
 
-<script>
-    document.getElementById('save-btn').addEventListener('click', () => {
-        if(document.getElementById('add-categories').getAttribute('class') === 'hide'){
-            document.getElementById('add-categories').setAttribute('class', 'show')
-            document.getElementById('submit-btn').setAttribute('class', 'show')
-            document.getElementById('save-btn').textContent = 'Hide'
-        } else {
-            document.getElementById('add-categories').setAttribute('class', 'hide')
-            document.getElementById('submit-btn').setAttribute('class', 'hide')
-            document.getElementById('save-btn').textContent = 'Save Recipe'
-        }
-    })
-</script>
+
+
+
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalLong">
+  Save Recipe
+</button>
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">How would you like to categorize this recipe?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="save-form" method="POST" action="/recipes">
+            <input type="hidden" name="title" value="<%= recipe.label %>">
+            <input type="hidden" name="source" value="<%= recipe.source %>">
+            <input type="hidden" name="sourceUrl" value="<%= recipe.url %>">
+            <input type="hidden" name="imageUrl" value="<%= recipe.image %>">
+            <input type="hidden" name="time" value="<%= cookPrepTime %>">
+            <input type="hidden" name="servings" value="<%= recipe.yield %>">
+            <input type="hidden" name="ingredients" value="<%= JSON.stringify(recipe.ingredients) %>">
+            <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
+            <input type="hidden" name="instructions" value="<%= JSON.stringify(instructionsObj)%>">
+            <input type="hidden" name="types" value="<%= JSON.stringify(types) %>">
+            <input type="hidden" name="diet" value="<%= JSON.stringify(recipe.dietLabels) %>">
+            <input type="hidden" name="health" value="<%= JSON.stringify(recipe.healthLabels) %>">
+            <input type="hidden" name="calories" value="<%= recipe.calories %>">
+
+            <div id="add-categories">
+                
+                <% if (categories.length) {%>
+                    <p>Choose from existing categories:</p>
+                    
+                    <% categories.forEach(category => { %>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="existing_categories" value="<%=category.name%>" id="<%=category.name%>">
+                            <label class="form-check-label" for="<%=category.name%>"><%=category.name%></label>
+                        </div>
+                    <% }) %>
+
+                    <p>Or add new categories:</p>
+
+                <%} else {%>
+                <p><i>You don't have any categories stored yet, start by adding below!</i></p>
+                <%}%>
+            
+                <label>Add new categories, separated by commas:</label>
+                <textarea class="form-control" name="new_categories" placeholder="i.e. breakfast, lunch, spicy, tailgate, etc. "></textarea>
+                <br>
+            </div>
+
+            <input type="submit" id="submit-btn" class="btn btn-danger" value="Save Recipe">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

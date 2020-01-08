@@ -1,7 +1,23 @@
+body {
+    height: 100vh;
+}
+
 .hide {
     display: none;
 }
 
 .show {
     display: block;
+}
+
+.source {
+    font-size: 20px;
+}
+
+.ingredients {
+    font-size: 12px;
+}
+
+footer {
+    font-size: 10px;
 }

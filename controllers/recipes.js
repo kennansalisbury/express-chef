@@ -15,75 +15,78 @@ router.get('/search', (req, res) => {
 // GET/recipes/search/results - results of search
 
 router.get('/search/results', (req, res) => {
-    // let q = req.query.search
+    let q = req.query.search
     
-    // axios.get(`https://api.edamam.com/search?q=${q}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
-    // .then(response => {
-    //     // res.send(response.data.hits)
-    //     res.render('recipes/search/index.ejs', {recipes: response.data.hits})
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    //     res.render('error')
-    // })
+    axios.get(`https://api.edamam.com/search?q=${q}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
+    .then(response => {
+        // res.send(response.data.hits)
+        res.render('recipes/search/index.ejs', {recipes: response.data.hits, search: req.query.search})
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
 
-    res.render('recipes/search/index.ejs', {recipes: null})
+    // res.render('recipes/search/index.ejs', {recipes: null})
 })
 
 // GET /recipes/search/result - show 1 selected search result from API
 router.get('/search/result', (req, res) => {
-    // let r = encodeURIComponent(req.query.url)
-    // //get recipe data to show from edamam
-    // axios.get(`https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
-    // .then(response => {
-    //     // console.log(response.data[0])
+//     let r = encodeURIComponent(req.query.url)
+//     //get recipe data to show from edamam
+//     axios.get(`https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
+//     .then(response => {
+//         // console.log(response.data[0])
        
-    //     let edamamRecipeUrl = response.data[0].url
+//         let edamamRecipeUrl = response.data[0].url
         
-    //     //put recipe URL through spoonacular api to recieve instructions
-    //     axios.get(`https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
-    //     .then(spoonData => {
-    //         //find all existing categories to pass through
-    //         db.category.findAll({
-                    //where userId = current user id
-                //     where: {userId: user.id || 1}
-                // })
-    //         .then(categories => {
+//         //put recipe URL through spoonacular api to recieve instructions
+//         axios.get(`https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
+//         .then(spoonData => {
+//             //find all existing categories to pass through
+//             db.category.findAll({
+//                     // where: {userId: req.user.id}
+//                     where: {userId: 5}
+//                 })
+//             .then(categories => {
         
-    //             //render show page with edamam and spoonacular data
-    //             res.render('recipes/search/show.ejs', {
-    //                 recipe: response.data[0], 
-    //                 instructionsText: spoonData.data.instructions, 
-    //                 instructionsObj: spoonData.data.instructions,
-    //                 time: spoonData.data.readyInMinutes,
-    //                 types: spoonData.data.dishTypes[0],
-    //                 categories: categories
-    //             })
+//                 //render show page with edamam and spoonacular data
+//                 res.render('recipes/search/show.ejs', {
+//                     recipe: response.data[0], 
+//                     instructionsText: spoonData.data.instructions, 
+//                     instructionsObj: spoonData.data.instructions,
+//                     time: spoonData.data.readyInMinutes,
+//                     types: spoonData.data.dishTypes[0],
+//                     categories: categories
+//                 })
 
-    //         }).catch(err => {
-    //             console.log(err)
-    //             res.render('error')
-    //         })
-    //     }).catch(err => {
-    //         console.log(err)
-    //         res.render('error')
-    //     })
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    //     res.render('error')
-    // })
+//             }).catch(err => {
+//                 console.log(err)
+//                 res.render('error')
+//             })
+//         }).catch(err => {
+//             console.log(err)
+//             res.render('error')
+//         })
+//     })
+//     .catch(err => {
+//         console.log(err)
+//         res.render('error')
+//     })
+
+// })
 
 
     //FOR TESTING FRONT-END
     db.category.findAll({
-        where: {userId: req.user.id || 1}
+        // where: {userId: req.user.id}
+        where: {userId: 5}
     })
     .then(categories => {
         res.render('recipes/search/show.ejs', {
             recipe: {
                 label: 'Recipe Name',
-                image: 'http://place-puppy/200x200',
+                image: 'https://www.edamam.com/web-img/42f/42f1805b2273113c029b41adadd36847.jpg',
                 source: 'Recipe Source',
                 url: 'http://www.google.com',
                 yield: 3,
@@ -225,6 +228,9 @@ router.post('/', (req, res) => {
         where: {
             sourceUrl: req.body.sourceUrl,
         },
+        // include: [db.user, {
+        //     where: {}
+        // }],
         defaults: {
             title: req.body.title,
             source: req.body.source,
@@ -243,7 +249,8 @@ router.post('/', (req, res) => {
     })
     .then(([recipe, wasCreated]) => {
         console.log(wasCreated? recipe.title + ' was created' : recipe.title + ' was already found')
-        db.user.findByPk(req.user.id)
+        // db.user.findByPk(req.user.id)
+        db.user.findByPk(5)
         .then(user => {
             user.addRecipe(recipe)
         })
@@ -259,7 +266,8 @@ router.post('/', (req, res) => {
                 db.category.findOrCreate({
                     where: {
                         name: c.trim(),
-                        userId: req.user.id || 1}
+                        // userId: req.user.id}
+                        userId: 5 }
                 })
                 .then(([category, wasCreated]) => {
                     recipe.addCategory(category)
@@ -290,7 +298,8 @@ router.get('/', (req, res) => {
     db.recipe.findAll({
         include: [{
             model: db.user, 
-            where: {id: req.user.id}
+            // where: {id: req.user.id}
+            where: {id: 5}
         }],
     })
     .then(recipes => {
@@ -300,24 +309,10 @@ router.get('/', (req, res) => {
         console.log(err)
         res.render('error')
     })
-
-    // db.category.findAll({
-    //     where: {
-    //         userId: req.user.id
-    //     },
-    //     include: [db.recipe]
-    // })
-    // .then(categories => {
-    //     res.render('recipes/index.ejs', {categories})
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    //     res.render('error')
-    // })
 })
 
 
-// GET /recipes/:id - show 1 saved recipe
+// GET /recipes/:id - show 1 saved recipe (ensure users cannot access other users recipes)
 router.get('/:id', (req, res) => {
     let recipeWasCreated
     
@@ -325,9 +320,32 @@ router.get('/:id', (req, res) => {
         recipeWasCreated = req.query.wasCreated
     }
 
-    db.recipe.findByPk(req.params.id)
+    db.recipe.findOne({
+        where: {id: req.params.id},
+        include: [db.category]
+    })
     .then(recipe => {
-        res.render('recipes/show.ejs', {recipe, recipeWasCreated})
+        
+        //if connected to current user, show - else, show error page
+
+        // recipe.hasUser(req.user.id)
+        recipe.hasUser(5)
+        .then(hasUser => {
+            if(hasUser) {
+                res.render('recipes/show.ejs', {recipe, recipeWasCreated})
+            }
+            else {
+                res.render('error')
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            res.render('error')
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
     })
 })
 

@@ -10,3 +10,10 @@
     <% let ingredients = JSON.parse(recipe.ingredients) %>
     <p><%= ingredients[0].text %></p>
 <%}%>
+
+<% if(recipe.categories.length) {%>
+    <%recipe.categories.forEach(category => {%>
+        <p><%=category.name%></p>
+        
+    <%})%>
+<%}%>

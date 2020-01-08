@@ -1,19 +1,48 @@
-<nav>
-  
-  <% if(!user) { %>
-    <li><a href="/">Home</a></li>
-    <li><a href="/auth/signup">Sign Up</a></li>
-    <li><a href="/auth/login">Login</a></li>
-  <% } else {%>
-    <li>Hi <%= user.firstname %></li>
-    <li><a href="/">Home</a></li>
-    <li><a href="/profile">Profile</a></li>
-    <li><a href="/auth/logout">Log Out</a></li>
-  <%}%>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <a class="navbar-brand">Node Chef</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      
+      <% if (!user) {%>
+      
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/signup">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/login">Login</a>
+        </li>
+      
+        <%} else {%>
+          <li class="nav-item">
+            <a class="nav-link" href="/profile/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/recipes/search">Search</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Saved Recipes
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/recipes">All Recipes</a>
+              <a class="dropdown-item" href="/categories">By Category</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/logout">Log Out</a>
+          </li>
+      <%}%>
 
-  <li><a href="/recipes/search">Search</a></li>
-  <li><a href="/recipes">All Saved Recipes</a></li>
-  <li><a href="/categories">Saved Recipes (by Category)</a></li>
 
-
-  </nav>
+    </ul>
+  </div>
+</nav>

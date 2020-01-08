@@ -61,7 +61,7 @@ passport.use(new FacebookStrategy({
     //grab facebook primary email
     let facebookEmail = profile.emails[0].value
     let displayName = profile.displayName.split(' ')
-    let photo = profile.photos.length ? profile.photos[0].value : 'ttp://place-puppy.com/200x200'
+    let photo = profile.photos.length ? profile.photos[0].value : 'http://place-puppy.com/200x200'
 
     //look for email in local database - do not duplicate
     db.user.findOrCreate({
@@ -72,7 +72,7 @@ passport.use(new FacebookStrategy({
             firstname: displayName[0],
             lastname: displayName[displayName.length - 1],
             username:  profile.username || displayName[0],
-            photoURL: photo,
+            photoUrl: photo,
             birthdate: profile._json.birthday,
             bio: `${profile.displayName} created this account with Facebook`
         }

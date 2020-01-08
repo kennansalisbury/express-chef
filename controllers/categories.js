@@ -4,15 +4,47 @@ let db = require('../models')
 //middleware to confirm user logged in
 let isLoggedIn = require('../middleware/isLoggedIn')
 
+//FOR TESTING
 router.get('/test', (req, res) => {
 
+    // db.recipe.findOne({
+    //     where: {
+    //         sourceUrl: req.body.sourceUrl,
+    //     },
+    //     include: [db.user, {
+    //         where: {url}
+    //     }],
+    // })
 
-    console.log('🟡🟡🟡🟡🟡' + req.user.id)
 
-    db.recipe.findByPk(1)
-    .then(recipe => {
-        
-        res.send(recipe.user_savedrecipe)
+
+    // db.recipe.findByPk(1)
+    // .then(recipe => {
+    //     // recipe.hasUser(req.user.id)
+    //     recipe.hasUser(5)
+    //     .then(hasUser => {
+    //         res.send(hasUser)
+    //     })
+    //     .catch(err => {
+    //         console.log(err)
+    //         res.render('error')
+    //     })
+
+        // db.user.findByPk(req.user.id)
+        // .then(user => {
+        //     user.hasRecipe(recipe)
+        //     .then(recipe => {
+        //         res.send(recipe)
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //         res.render('error')
+        //     }) 
+        // })
+        // .catch(err => {
+        //     console.log(err)
+        //     res.render('error')
+        // }) 
     })
     .catch(err => {
         console.log(err)
@@ -35,13 +67,13 @@ router.get('/test', (req, res) => {
 })
 
 
-// GET /categories - show all categories
+// GET /categories - show all categories for current user
 router.get('/', (req, res) => {
 
     db.category.findAll({
-        //where userID = currentuser.id
-        //PLACEHOLDER/TESTING
-        where: {userId: req.user.id}
+        // where: {userId: req.user.id}
+        where: {userId: 5},
+        include: [db.user]
     })
     .then(categories => {
         res.render('categories/index.ejs', {categories})
