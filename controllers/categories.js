@@ -7,7 +7,11 @@ let isLoggedIn = require('../middleware/isLoggedIn')
 // GET /categories - show all categories
 router.get('/', (req, res) => {
 
-    db.category.findAll()
+    db.category.findAll({
+        //where userID = currentuser.id
+        //PLACEHOLDER/TESTING
+        where: {userId: user.id || 1}
+    })
     .then(categories => {
         res.render('categories/index.ejs', {categories})
     })

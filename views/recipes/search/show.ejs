@@ -24,21 +24,31 @@
     <input type="hidden" name="ingredients" value="<%= JSON.stringify(recipe.ingredients) %>">
     <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
     <input type="hidden" name="instructions" value="<%= JSON.stringify(instructionsObj)%>">
-    <input type="hidden" name="type" value="<%= type %>">
-    <input type="hidden" name="diet" value="<%= recipe.dietLabels[0] %>">
-    <input type="hidden" name="health" value="<%= recipe.healthLabels[0] %>">
+    <input type="hidden" name="type" value="<%= JSON.stringify(type) %>">
+    <input type="hidden" name="diet" value="<%= JSON.stringify(recipe.dietLabels) %>">
+    <input type="hidden" name="health" value="<%= JSON.stringify(recipe.healthLabels) %>">
+    <input type="hidden" name="calories" value="<%= recipe.calories %>">
 
     <div id="add-categories" class="hide">
         <h3>Categorize (optional):</h3>
 
-        <h4>Existing categories:</h4>
-        
-        <% categories.forEach(category => { %>
-            <input type="checkbox" name="name" value="<%=category.name%>">
-            <label><%=category.name%></label>
-        <% }) %>
 
-        <h4>Add your own</h4>
+        <% if (categories) {%>
+            <h4>Existing categories:</h4>
+            
+            <% categories.forEach(category => { %>
+                <input type="checkbox" name="existing_categories" value="<%=category.name%>">
+                <label><%=category.name%></label>
+            <% }) %>
+
+            <h4>Add your own categories</h4>
+
+        <%} else {%>
+        <h4> You don't have any categories stored yet, start by adding some new ones below!</h4>
+        <%}%>
+
+        <label>Add categories by submitting below. Categories should be separated by commas.</label>
+        <input type="text" name="new_categories" placeholder="i.e. breakfast, lunch, dinner, etc. ">
 
     </div>
 

@@ -29,23 +29,26 @@ module.exports = {
       ingredientsText: {
         type: Sequelize.TEXT
       },
-      ingredients: {
+      ingredientsObj: {
         type: Sequelize.JSONB
       },
       instructionsText: {
         type: Sequelize.TEXT
       },
-      instructions: {
+      instructionsObj: {
         type: Sequelize.JSONB
       },
-      type: {
-        type: Sequelize.STRING
+      dishTypes: {
+        type: Sequelize.JSONB
       },
-      diet: {
-        type: Sequelize.STRING
+      dietLabels: {
+        type: Sequelize.JSONB
       },
-      health: {
-        type: Sequelize.STRING
+      healthLabels: {
+        type: Sequelize.JSONB
+      },
+      calories: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

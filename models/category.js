@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {});
   category.associate = function(models) {
-    models.category.belongsToMany(models.user, {through: 'users_categories'})
+    models.category.hasOne(models.user)
     models.category.belongsToMany(models.recipe, {through: 'recipes_categories'})
   };
   return category;
