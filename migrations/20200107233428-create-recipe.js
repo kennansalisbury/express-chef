@@ -26,9 +26,6 @@ module.exports = {
       servings: {
         type: Sequelize.INTEGER
       },
-      ingredientsText: {
-        type: Sequelize.TEXT
-      },
       ingredientsObj: {
         type: Sequelize.JSONB
       },

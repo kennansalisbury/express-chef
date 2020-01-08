@@ -75,12 +75,12 @@ router.get('/logout', (req, res) => {
 
 //route that our app uses:
 router.get('/facebook', passport.authenticate('facebook', {
-    scope: ['public_profile', 'email', 'user_birthday']
+    scope: ['public_profile', 'email']
 }))
 
-//route github uses (callback url):
+//route facebook uses (callback url):
 router.get('/callback/facebook', passport.authenticate('facebook', {
-    successRedirect: '/profile',
+    successRedirect: '/recipes/search',
     successFlash: 'Facebook login successful',
     failureRedirect: '/auth/login',
     failureFlash: 'Facebook login failed'

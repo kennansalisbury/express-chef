@@ -4,15 +4,16 @@
     <li><a href="/">Home</a></li>
     <li><a href="/auth/signup">Sign Up</a></li>
     <li><a href="/auth/login">Login</a></li>
-
-    <li><a href="/recipes/search">Search</a></li>
-    <li><a href="/recipes">Saved</a></li>
-    <li><a href="/categories">Categories</a></li>
   <% } else {%>
     <li>Hi <%= user.firstname %></li>
     <li><a href="/">Home</a></li>
     <li><a href="/profile">Profile</a></li>
     <li><a href="/auth/logout">Log Out</a></li>
   <%}%>
+
+  <li><a href="/recipes/search">Search</a></li>
+  <li><a href="/recipes">All Saved Recipes</a></li>
+  <li><a href="/categories">Saved Recipes (by Category)</a></li>
+
 
   </nav>

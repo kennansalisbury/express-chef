@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     imageUrl: DataTypes.STRING,
     time: DataTypes.INTEGER,
     servings: DataTypes.INTEGER,
-    ingredientsText: DataTypes.TEXT,
     ingredientsObj: DataTypes.JSONB,
     instructionsText: DataTypes.TEXT,
     instructionsObj: DataTypes.JSONB,
@@ -15,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     dietLabels: DataTypes.JSONB,
     healthLabels: DataTypes.JSONB,
     calories: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
   }, {});
   recipe.associate = function(models) {
     models.recipe.belongsToMany(models.user, {through: 'user_savedrecipes'})

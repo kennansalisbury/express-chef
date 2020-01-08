@@ -77,7 +77,7 @@ router.get('/search/result', (req, res) => {
 
     //FOR TESTING FRONT-END
     db.category.findAll({
-        where: {userId: user.id || 1}
+        where: {userId: req.user.id || 1}
     })
     .then(categories => {
         res.render('recipes/search/show.ejs', {
@@ -94,16 +94,6 @@ router.get('/search/result', (req, res) => {
                     "Peanut-Free",
                     "Tree-Nut-Free",
                     "Alcohol-Free"
-                    ],
-                ingredientlines: [
-                    "2 carrots , coarsely grated",
-                    "250.0g leftover cooked rice , or a 250g pouch pre-cooked rice",
-                    "1/3 cucumber , finely chopped",
-                    "1.0 tsp clear honey",
-                    "20.0g pack mint leaves, roughly chopped",
-                    "200.0g pack spicy cooked chicken fillets (we used Waitrose sweet chilli mini fillets)",
-                    "pinch chilli powder",
-                    "150.0ml pot low-fat natural yogurt"
                     ],
                 ingredients: [
                     {
@@ -242,10 +232,10 @@ router.post('/', (req, res) => {
             time: req.body.time,
             servings: req.body.servings,
             ingredientsText: req.body.ingredientsText,
-            ingredients: req.body.ingredients,
+            ingredientsObj: req.body.ingredients,
             instructionsText: req.body.instructionsText,
-            instructions: req.body.instructions,
-            dishTypes: req.body.type,
+            instructionsObj: req.body.instructions,
+            dishTypes: req.body.types,
             dietLabels: req.body.diet,
             healthLabels: req.body.health,
             calories: req.body.calories,
@@ -253,7 +243,15 @@ router.post('/', (req, res) => {
     })
     .then(([recipe, wasCreated]) => {
         console.log(wasCreated? recipe.title + ' was created' : recipe.title + ' was already found')
-        
+        db.user.findByPk(req.user.id)
+        .then(user => {
+            user.addRecipe(recipe)
+        })
+        .catch(err => {
+            console.log('🟣' + err)
+            res.render('error')
+        })
+
         //if there are categories, find or create
 
         if(categories.length){
@@ -261,7 +259,7 @@ router.post('/', (req, res) => {
                 db.category.findOrCreate({
                     where: {
                         name: c.trim(),
-                        userId: user.id || 1}
+                        userId: req.user.id || 1}
                 })
                 .then(([category, wasCreated]) => {
                     recipe.addCategory(category)
@@ -289,20 +287,33 @@ router.post('/', (req, res) => {
 //GET /recipes - show all saved recipes
 router.get('/', (req, res) => {
 
-    db.category.findAll({
-        where: {
-            userId: user.id || 1
-        },
-        include: [db.recipe]
+    db.recipe.findAll({
+        include: [{
+            model: db.user, 
+            where: {id: req.user.id}
+        }],
     })
-    .then(categories => {
-        recipes = categories.recipes
+    .then(recipes => {
         res.render('recipes/index.ejs', {recipes})
     })
     .catch(err => {
         console.log(err)
         res.render('error')
     })
+
+    // db.category.findAll({
+    //     where: {
+    //         userId: req.user.id
+    //     },
+    //     include: [db.recipe]
+    // })
+    // .then(categories => {
+    //     res.render('recipes/index.ejs', {categories})
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    //     res.render('error')
+    // })
 })
 
 

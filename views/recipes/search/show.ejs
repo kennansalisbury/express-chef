@@ -20,11 +20,10 @@
     <input type="hidden" name="imageUrl" value="<%= recipe.image %>">
     <input type="hidden" name="time" value="<%= cookPrepTime %>">
     <input type="hidden" name="servings" value="<%= recipe.yield %>">
-    <input type="hidden" name="ingredientsText" value="<%= recipe.ingredientLines %>">
     <input type="hidden" name="ingredients" value="<%= JSON.stringify(recipe.ingredients) %>">
     <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
     <input type="hidden" name="instructions" value="<%= JSON.stringify(instructionsObj)%>">
-    <input type="hidden" name="type" value="<%= JSON.stringify(type) %>">
+    <input type="hidden" name="types" value="<%= JSON.stringify(types) %>">
     <input type="hidden" name="diet" value="<%= JSON.stringify(recipe.dietLabels) %>">
     <input type="hidden" name="health" value="<%= JSON.stringify(recipe.healthLabels) %>">
     <input type="hidden" name="calories" value="<%= recipe.calories %>">

@@ -4,13 +4,44 @@ let db = require('../models')
 //middleware to confirm user logged in
 let isLoggedIn = require('../middleware/isLoggedIn')
 
+router.get('/test', (req, res) => {
+
+
+    console.log('🟡🟡🟡🟡🟡' + req.user.id)
+
+    db.recipe.findByPk(1)
+    .then(recipe => {
+        
+        res.send(recipe.user_savedrecipe)
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
+    
+    // db.recipe.findAll({
+    //     include: [{
+    //         model: db.user, 
+    //         where: {id: req.user.id}
+    //     }],
+    // })
+    // .then(recipes => {
+    //     res.send(recipes)
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    //     res.render('error')
+    // })
+})
+
+
 // GET /categories - show all categories
 router.get('/', (req, res) => {
 
     db.category.findAll({
         //where userID = currentuser.id
         //PLACEHOLDER/TESTING
-        where: {userId: user.id || 1}
+        where: {userId: req.user.id}
     })
     .then(categories => {
         res.render('categories/index.ejs', {categories})
