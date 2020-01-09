@@ -7,28 +7,56 @@
     <p>No recipes saved in this category currently</p>
 <%} else {%>
 
-<% recipes.forEach(recipe => { %>
-    <div class="card mb-3" style="max-width: 640px;">
-        <div class="row no-gutters">
-            <div class="col-md-4">
-                <img src="<%=recipe.imageUrl%>" class="card-img img-fluid" alt="<%= recipe.title %>-img">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title"><%= recipe.title %></h5>
-                    <p class="card-text"><%= recipe.source %></p>
-                    <a href="/recipes/<%= recipe.id%>" class="btn btn-secondary">View Full Recipe</a>
+    <% recipes.forEach(recipe => { %>
+        <div class="card mb-3" style="max-width: 640px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="<%=recipe.imageUrl%>" class="card-img img-fluid" alt="<%= recipe.title %>-img">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= recipe.title %></h5>
+                        <p class="card-text"><%= recipe.source %></p>
+                        <a href="/recipes/<%= recipe.id%>" class="btn btn-secondary">View Full Recipe</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-<% }) %>
+    <% }) %>
 
 <%}%>
 
-<form action="/categories/<%=category.id%>/?_method=DELETE" method="POST">
-    <input class="btn btn-success" type="submit" value="Delete this category">
-    <small class="form-text text-muted">Any recipes associated with this category will still remain in your saved recipes library.</small>
-</form>
+<div class="row">
+    <form action="/categories/<%=category.id%>/?_method=DELETE" method="POST">
+        <input class="btn btn-danger" type="submit" value="Delete Category">
+        <!--<small class="form-text text-muted">Any recipes associated with this category will still remain in your saved recipes library.</small>-->
+    </form>
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalLong">
+    Edit Category
+    </button>
+</div>
 
 
+<!--MODAL-->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit category name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="save-form" method="POST" action="/categories/<%=category.id%>/?_method=PUT">
+         
+                <input id="categoryNameEdit" name="name" type="text" value="<%=category.name%>">
+            
+            <input type="submit" id="submit-btn" class="btn btn-danger" value="Update Category">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

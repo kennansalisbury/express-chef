@@ -9,12 +9,12 @@ let isLoggedIn = require('../middleware/isLoggedIn')
 
 
 // GET /recipes/search - 1st page user sees when logged in, search recipes (api)
-router.get('/search', (req, res) => {
+router.get('/search', isLoggedIn, (req, res) => {
     res.render('recipes/search/main.ejs')
 })
 
 // GET/recipes/search/results - results of search
-router.get('/search/results', (req, res) => {
+router.get('/search/results', isLoggedIn, (req, res) => {
     let q = req.query.search
     
     axios.get(`https://api.edamam.com/search?q=${q}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
@@ -31,7 +31,7 @@ router.get('/search/results', (req, res) => {
 })
 
 // GET /recipes/search/result - show 1 selected search result from API
-router.get('/search/result', (req, res) => {
+router.get('/search/result', isLoggedIn, (req, res) => {
     let r = encodeURIComponent(req.query.url)
 
     console.log(`🥥🥥🥥🥥 https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
@@ -82,7 +82,7 @@ router.get('/search/result', (req, res) => {
 
 
 //POST /recipes - save a recipe to db
-router.post('/', (req, res) => {
+router.post('/', isLoggedIn, (req, res) => {
     let categories = []
     
     // check if there are either existing or new categories in form
@@ -216,7 +216,7 @@ router.post('/', (req, res) => {
 })
 
 //GET /recipes - show all saved recipes
-router.get('/', (req, res) => {
+router.get('/', isLoggedIn, (req, res) => {
 
     db.recipe.findAll({
         include: [{
@@ -236,7 +236,7 @@ router.get('/', (req, res) => {
 
 
 // GET /recipes/:id - show 1 saved recipe (ensure users cannot access other users recipes)
-router.get('/:id', (req, res) => {
+router.get('/:id', isLoggedIn, (req, res) => {
     let recipeWasCreated
     
     if(req.query.wasCreated) {
@@ -279,6 +279,53 @@ router.get('/:id', (req, res) => {
             else {
                 res.render('error')
             }
+        })
+        .catch(err => {
+            console.log(err)
+            res.render('error')
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
+})
+
+
+//DELETE /recipes/:id - delete recipe
+router.delete('/:id', isLoggedIn, (req, res) => {
+
+    // delete from user_savedrecipes join table
+    db.user_savedrecipes.destroy({
+        where: {
+            userId: req.user.id,
+            recipeId: req.params.id
+        }
+    }).then(destroyedRecipeRows => {
+        console.log(destroyedRecipeRows + '🌈🌈🌈🌈')
+        
+        //find all categories associated with current user
+        db.category.findAll({
+            where: {userId: req.user.id}
+        })
+        .then(categories => {
+            //delete from recipe_categories table where recipeId = req.params.id and categoryId = categoryid associated with current user
+            console.log(categories + '🐳🐳🐳🐳')
+            async.forEach(categories, (c, done) => {
+                db.recipes_categories.destroy({
+                    where: {
+                        categoryId: c.id,
+                        recipeId: req.params.id
+                    }
+                })
+                .then(destroyedJoinRows => {
+                    console.log(destroyedJoinRows + '☀️☀️☀️☀️')
+                    done()
+                })
+                .catch(done)
+            }, ()=>{
+                res.redirect('/recipes')
+            })
         })
         .catch(err => {
             console.log(err)

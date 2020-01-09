@@ -24,7 +24,7 @@ router.get('/', isLoggedIn, (req, res) => {
 })
 
 // GET /categories/:id - show all recipes in 1 category
-router.get('/:id', (req, res) => {
+router.get('/:id', isLoggedIn, (req, res) => {
 
     db.category.findOne({
         where: {id: req.params.id,
@@ -42,9 +42,30 @@ router.get('/:id', (req, res) => {
     }) 
 })
 
+//PUT /categories/:id - edit category
+router.put('/:id', isLoggedIn, (req, res) => {
+    // res.send('PUT ROUTE')
+
+    db.category.update({
+        name: req.body.name
+    },
+    {
+        where: {
+            id: req.params.id
+        } 
+    })
+    .then(category => {
+        res.redirect('/categories/' + req.params.id)
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
+})
+
 
 // DELETE /categories - delete categories
-router.delete('/:id', (req, res) => {
+router.delete('/:id', isLoggedIn, (req, res) => {
     //delete the category from the database (check if auto deletes from recipes_categories table)
     db.category.destroy({
         where: {id: req.params.id}
