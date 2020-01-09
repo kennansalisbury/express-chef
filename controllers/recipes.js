@@ -2,6 +2,7 @@ let axios = require('axios')
 let router = require('express').Router()
 let db = require('../models')
 let async = require('async')
+let cloudinary = require('cloudinary')
 
 //middleware to confirm user logged in
 let isLoggedIn = require('../middleware/isLoggedIn')
@@ -13,7 +14,6 @@ router.get('/search', (req, res) => {
 })
 
 // GET/recipes/search/results - results of search
-
 router.get('/search/results', (req, res) => {
     let q = req.query.search
     
@@ -32,210 +32,49 @@ router.get('/search/results', (req, res) => {
 
 // GET /recipes/search/result - show 1 selected search result from API
 router.get('/search/result', (req, res) => {
-//     let r = encodeURIComponent(req.query.url)
-//     //get recipe data to show from edamam
-//     axios.get(`https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
-//     .then(response => {
-//         // console.log(response.data[0])
+    let r = encodeURIComponent(req.query.url)
+    //get recipe data to show from edamam
+    axios.get(`https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
+    .then(response => {
+        // console.log(response.data[0])
        
-//         let edamamRecipeUrl = response.data[0].url
+        let edamamRecipeUrl = response.data[0].url
         
-//         //put recipe URL through spoonacular api to recieve instructions
-//         axios.get(`https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
-//         .then(spoonData => {
-//             //find all existing categories to pass through
-//             db.category.findAll({
-//                     // where: {userId: req.user.id}
-//                     where: {userId: 5}
-//                 })
-//             .then(categories => {
+        //put recipe URL through spoonacular api to recieve instructions
+        axios.get(`https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
+        .then(spoonData => {
+            //find all existing categories to pass through
+            db.category.findAll({
+                    where: {userId: req.user.id}
+                })
+            .then(categories => {
         
-//                 //render show page with edamam and spoonacular data
-//                 res.render('recipes/search/show.ejs', {
-//                     recipe: response.data[0], 
-//                     instructionsText: spoonData.data.instructions, 
-//                     instructionsObj: spoonData.data.instructions,
-//                     time: spoonData.data.readyInMinutes,
-//                     types: spoonData.data.dishTypes[0],
-//                     categories: categories
-//                 })
+                //render show page with edamam and spoonacular data and existing categories for user
+                res.render('recipes/search/show.ejs', {
+                    recipe: response.data[0], 
+                    instructionsText: spoonData.data.instructions, 
+                    instructionsObj: spoonData.data.analyzedInstructions,
+                    time: spoonData.data.readyInMinutes,
+                    types: spoonData.data.dishTypes,
+                    categories: categories
+                })
 
-//             }).catch(err => {
-//                 console.log(err)
-//                 res.render('error')
-//             })
-//         }).catch(err => {
-//             console.log(err)
-//             res.render('error')
-//         })
-//     })
-//     .catch(err => {
-//         console.log(err)
-//         res.render('error')
-//     })
-
-// })
-
-
-    //FOR TESTING FRONT-END
-    db.category.findAll({
-        // where: {userId: req.user.id}
-        where: {userId: 2}
-    })
-    .then(categories => {
-        res.render('recipes/search/show.ejs', {
-            recipe: {
-                label: 'CHICKEN AND BURGERS',
-                image: 'https://www.edamam.com/web-img/42f/42f1805b2273113c029b41adadd36847.jpg',
-                source: 'Recipe Source',
-                url: 'http://www.testwebsite.com',
-                yield: 3,
-                dietLabels: [
-                    "Low-Fat"
-                    ],
-                healthLabels: [
-                    "Peanut-Free",
-                    "Tree-Nut-Free",
-                    "Alcohol-Free"
-                    ],
-                ingredients: [
-                    {
-                    "text": "2 carrots , coarsely grated",
-                    "weight": 122.0
-                    },
-                    {
-                    "text": "250.0g leftover cooked rice , or a 250g pouch pre-cooked rice",
-                    "weight": 250.0
-                    },
-                    {
-                    "text": "1/3 cucumber , finely chopped",
-                    "weight": 100.33333333333333
-                    },
-                    {
-                    "text": "1.0 tsp clear honey",
-                    "weight": 7.0625000003582175
-                    },
-                    {
-                    "text": "20.0g pack mint leaves, roughly chopped",
-                    "weight": 20.0
-                    },
-                    {
-                    "text": "200.0g pack spicy cooked chicken fillets (we used Waitrose sweet chilli mini fillets)",
-                    "weight": 200.0
-                    },
-                    {
-                    "text": "pinch chilli powder",
-                    "weight": 0.1666666668780043
-                    },
-                    {
-                    "text": "150.0ml pot low-fat natural yogurt",
-                    "weight": 155.33316678659128
-                    }
-                    ],
-                calories: 500,
-                totalTime: 20
-            }, 
-            instructionsText: "Chop the chicken into bite-size pieces and mix with the rice, cucumber and carrots.\nMix half the mint with the yogurt, honey, chilli powder, and seasoning. Stir into the rice and sprinkle with the remaining mint.", 
-            instructionsObj: [
-                {
-                "name": "",
-                "steps": [
-                {
-                "number": 1,
-                "step": "Chop the chicken into bite-size pieces and mix with the rice, cucumber and carrots.",
-                "ingredients": [
-                {
-                "id": 11206,
-                "name": "cucumber",
-                "image": "cucumber.jpg"
-                },
-                {
-                "id": 11124,
-                "name": "carrot",
-                "image": "sliced-carrot.png"
-                },
-                {
-                "id": 20444,
-                "name": "rice",
-                "image": "uncooked-white-rice.png"
-                }
-                ],
-                "equipment": [ ]
-                },
-                {
-                "number": 2,
-                "step": "Mix half the mint with the yogurt, honey, chilli powder, and seasoning. Stir into the rice and sprinkle with the remaining mint.",
-                "ingredients": [
-                {
-                "id": 2009,
-                "name": "chili powder",
-                "image": "chili-powder.jpg"
-                },
-                {
-                "id": 1116,
-                "name": "yogurt",
-                "image": "plain-yogurt.jpg"
-                },
-                {
-                "id": 19296,
-                "name": "honey",
-                "image": "honey.png"
-                },
-                {
-                "id": 2064,
-                "name": "mint",
-                "image": "mint.jpg"
-                },
-                {
-                "id": 20444,
-                "name": "rice",
-                "image": "uncooked-white-rice.png"
-                }
-                ],
-                "equipment": [ ]
-                }
-                ]
-                }
-                ],
-            time: 20,
-            types: ['dinner'],
-            categories: categories
-        })
-    }).catch(err => {
+            }).catch(err => {
+                console.log(err)
+                res.render('error')
+            })
+        }).catch(err => {
             console.log(err)
             res.render('error')
         })
     })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
 
+})
 
-
-//FOR TESTING - NEED UPDATED USER ID
-const findOrCreateCategories = (categories, recipe, wasCreated, res) => {
-    if(categories.length){
-        async.forEach(categories, (c, done) => {
-            db.category.findOrCreate({
-                where: {
-                    name: c.trim().toLowerCase(),
-                    // userId: req.user.id}
-                    userId: 2 }
-            })
-            .then(([category, wasCreated]) => {
-                recipe.addCategory(category)
-                .then(() => {
-                    done()
-                })
-                .catch(done)
-            })
-            .catch(done)
-        }, 
-        () => {
-            //once finished adding categories, redirect to recipe
-            res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
-        })
-    } else {
-        res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
-    }
-}
 
 //POST /recipes - save a recipe to db
 router.post('/', (req, res) => {
@@ -249,6 +88,36 @@ router.post('/', (req, res) => {
     if(req.body.new_categories){
         let newCategories = req.body.new_categories.split(',')
         categories = categories.concat(newCategories)
+    }
+
+
+    //FOR TESTING - NEED UPDATED USER ID
+    const findOrCreateCategories = (categories, recipe, wasCreated, req, res) => {
+
+        if(categories.length){
+            async.forEach(categories, (c, done) => {
+                db.category.findOrCreate({
+                    where: {
+                        name: c.trim().toLowerCase(),
+                        userId: req.user.id}
+                        // userId: 2 }
+                })
+                .then(([category, wasCreated]) => {
+                    recipe.addCategory(category)
+                    .then(() => {
+                        done()
+                    })
+                    .catch(done)
+                })
+                .catch(done)
+            }, 
+            () => {
+                //once finished adding categories, redirect to recipe
+                res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+            })
+        } else {
+            res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+        }
     }
 
 
@@ -281,8 +150,8 @@ router.post('/', (req, res) => {
                 
                 //add user associations
 
-                //db.user.findByPk(req.user.id)
-                db.user.findByPk(2)
+                db.user.findByPk(req.user.id)
+                // db.user.findByPk(2)
                 .then(user => {
                     user.addRecipe(newRecipe)
                 })
@@ -292,7 +161,7 @@ router.post('/', (req, res) => {
                 })
                 let wasCreated = true
                 //findorcreate categories
-                findOrCreateCategories(categories, newRecipe, wasCreated, res)
+                findOrCreateCategories(categories, newRecipe, wasCreated, req, res)
 
             })
             .catch(err => {
@@ -303,8 +172,8 @@ router.post('/', (req, res) => {
             //else (recipe does exist) - check if associated with current user
             let wasCreated
 
-            //recipe.hasUser(req.user.id)
-            recipe.hasUser(2)
+            recipe.hasUser(req.user.id)
+            // recipe.hasUser(2)
             .then(hasUser => {
                 
 
@@ -312,8 +181,8 @@ router.post('/', (req, res) => {
                 if(!hasUser){
                     wasCreated = true
 
-                    //db.user.findByPk(req.user.id)
-                    db.user.findByPk(2)
+                    db.user.findByPk(req.user.id)
+                    // db.user.findByPk(2)
                     .then(user => {
                         user.addRecipe(recipe)
                     })
@@ -327,7 +196,7 @@ router.post('/', (req, res) => {
 
                 //whether associated with user or not, findorcreate categories
 
-                findOrCreateCategories(categories, recipe, wasCreated, res)
+                findOrCreateCategories(categories, recipe, wasCreated, req, res)
 
             })
 
@@ -347,8 +216,8 @@ router.get('/', (req, res) => {
     db.recipe.findAll({
         include: [{
             model: db.user, 
-            // where: {id: req.user.id}
-            where: {id: 5}
+            where: {id: req.user.id}
+            // where: {id: 2}
         }],
     })
     .then(recipes => {
@@ -377,8 +246,8 @@ router.get('/:id', (req, res) => {
         
         //if connected to current user, show - else, show error page
 
-        // recipe.hasUser(req.user.id)
-        recipe.hasUser(2)
+        recipe.hasUser(req.user.id)
+        // recipe.hasUser(2)
         .then(hasUser => {
             if(hasUser) {
                 //if user associated with recipe, check each category for user and push to new array if associated with current user
@@ -387,8 +256,8 @@ router.get('/:id', (req, res) => {
                     db.category.findOne({
                         where: {
                             id: c.id,
-                            // userId: req.user.id
-                            userId: 2
+                            userId: req.user.id
+                            // userId: 2
                         }
                     })
                     .then(category => {
@@ -399,7 +268,6 @@ router.get('/:id', (req, res) => {
                     })
                     .catch(done)
                 }, () => {
-                    console.log('🧀🧀🧀🧀' + currentUserRecipeCategories + '🧀🧀🧀🧀')
                     res.render('recipes/show.ejs', {recipe: recipe, categories: currentUserRecipeCategories, recipeWasCreated})
                 })
             }
@@ -449,3 +317,134 @@ module.exports = router
 //     // })
 
 // })
+
+
+    // // FOR TESTING POST ROUTE FRONT-END
+    // db.category.findAll({
+    //     // where: {userId: req.user.id}
+    //     where: {userId: 2}
+    // })
+    // .then(categories => {
+    //     res.render('recipes/search/show.ejs', {
+    //         recipe: {
+    //             label: 'CHICKEN AND BURGERS',
+    //             image: 'https://www.edamam.com/web-img/42f/42f1805b2273113c029b41adadd36847.jpg',
+    //             source: 'Recipe Source',
+    //             url: 'http://www.testwebsite.com',
+    //             yield: 3,
+    //             dietLabels: [
+    //                 "Low-Fat"
+    //                 ],
+    //             healthLabels: [
+    //                 "Peanut-Free",
+    //                 "Tree-Nut-Free",
+    //                 "Alcohol-Free"
+    //                 ],
+    //             ingredients: [
+    //                 {
+    //                 "text": "2 carrots , coarsely grated",
+    //                 "weight": 122.0
+    //                 },
+    //                 {
+    //                 "text": "250.0g leftover cooked rice , or a 250g pouch pre-cooked rice",
+    //                 "weight": 250.0
+    //                 },
+    //                 {
+    //                 "text": "1/3 cucumber , finely chopped",
+    //                 "weight": 100.33333333333333
+    //                 },
+    //                 {
+    //                 "text": "1.0 tsp clear honey",
+    //                 "weight": 7.0625000003582175
+    //                 },
+    //                 {
+    //                 "text": "20.0g pack mint leaves, roughly chopped",
+    //                 "weight": 20.0
+    //                 },
+    //                 {
+    //                 "text": "200.0g pack spicy cooked chicken fillets (we used Waitrose sweet chilli mini fillets)",
+    //                 "weight": 200.0
+    //                 },
+    //                 {
+    //                 "text": "pinch chilli powder",
+    //                 "weight": 0.1666666668780043
+    //                 },
+    //                 {
+    //                 "text": "150.0ml pot low-fat natural yogurt",
+    //                 "weight": 155.33316678659128
+    //                 }
+    //                 ],
+    //             calories: 500,
+    //             totalTime: 20
+    //         }, 
+    //         instructionsText: "Chop the chicken into bite-size pieces and mix with the rice, cucumber and carrots.\nMix half the mint with the yogurt, honey, chilli powder, and seasoning. Stir into the rice and sprinkle with the remaining mint.", 
+    //         instructionsObj: [
+    //             {
+    //             "name": "",
+    //             "steps": [
+    //             {
+    //             "number": 1,
+    //             "step": "Chop the chicken into bite-size pieces and mix with the rice, cucumber and carrots.",
+    //             "ingredients": [
+    //             {
+    //             "id": 11206,
+    //             "name": "cucumber",
+    //             "image": "cucumber.jpg"
+    //             },
+    //             {
+    //             "id": 11124,
+    //             "name": "carrot",
+    //             "image": "sliced-carrot.png"
+    //             },
+    //             {
+    //             "id": 20444,
+    //             "name": "rice",
+    //             "image": "uncooked-white-rice.png"
+    //             }
+    //             ],
+    //             "equipment": [ ]
+    //             },
+    //             {
+    //             "number": 2,
+    //             "step": "Mix half the mint with the yogurt, honey, chilli powder, and seasoning. Stir into the rice and sprinkle with the remaining mint.",
+    //             "ingredients": [
+    //             {
+    //             "id": 2009,
+    //             "name": "chili powder",
+    //             "image": "chili-powder.jpg"
+    //             },
+    //             {
+    //             "id": 1116,
+    //             "name": "yogurt",
+    //             "image": "plain-yogurt.jpg"
+    //             },
+    //             {
+    //             "id": 19296,
+    //             "name": "honey",
+    //             "image": "honey.png"
+    //             },
+    //             {
+    //             "id": 2064,
+    //             "name": "mint",
+    //             "image": "mint.jpg"
+    //             },
+    //             {
+    //             "id": 20444,
+    //             "name": "rice",
+    //             "image": "uncooked-white-rice.png"
+    //             }
+    //             ],
+    //             "equipment": [ ]
+    //             }
+    //             ]
+    //             }
+    //             ],
+    //         time: 20,
+    //         types: ['dinner'],
+    //         categories: categories
+    //     })
+    // }).catch(err => {
+    //         console.log(err)
+    //         res.render('error')
+    //     })
+    // })

@@ -1,8 +1,27 @@
-<h1>Show 1 Category</h1>
+<h1 class="text-secondary">Your <span class="text-dark"><%=category.name%></span> recipes </h1>
 
-<h2><%= category.name %> </h2>
+<%if(!recipes.length){%>
+    <p>No recipes saved in this category currently</p>
+<%} else {%>
 
-<h2>Recipes</h2>
 <% recipes.forEach(recipe => { %>
-    <h3><%= recipe.title %> 
+    <div class="card mb-3" style="max-width: 640px;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img src="<%=recipe.imageUrl%>" class="card-img img-fluid" alt="<%= recipe.title %>-img">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= recipe.title %></h5>
+                    <p class="card-text"><%= recipe.source %></p>
+                    <a href="/recipes/<%= recipe.id%>" class="btn btn-secondary">View Full Recipe</a>
+                </div>
+            </div>
+        </div>
+    </div>
 <% }) %>
+
+<%}%>
+
+<a class="btn btn-info" href="/categories">View All Categories</a>
+<a class="btn btn-info" href="/recipes">View All Saved Recipes</a>

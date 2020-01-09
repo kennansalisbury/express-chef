@@ -4,6 +4,7 @@ let express = require('express')
 let layouts = require('express-ejs-layouts')
 let flash = require('connect-flash')
 let session = require('express-session')
+let cloudinary = require('cloudinary')
 
 // Declare express app varaiable
 let app = express()
@@ -37,7 +38,8 @@ app.use('/categories', require('./controllers/categories'))
 
 // Add home or catch-all routes
 app.get('/', (req, res) => {
-    res.render('home')
+    let backgroundImg = cloudinary.url('sample.jpg')
+    res.render('home', {backgroundImg})
 })
 
 //error route - ALWAYS THE BOTTOM ROUTE

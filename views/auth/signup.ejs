@@ -1,22 +1,26 @@
-<div class="d-flex justify-content-around">
-  <div>
+<div class="d-flex flex-column-reverse justify-content-around align-items-center">
+  <div class="card bg-light col-7 border-light m-2 p-3">
     <h1>Sign Up with Email</h1>
         
     <form method="POST" action="/auth/signup" > 
-      <div class="form-group">
+      
+      <div class="row">
+      <div class="form-group  col-6">
         <input id="firstname" type="text" class="form-control validate" name="firstname" value="<%=data.firstname%>">
         <label for="firstname">First Name</label>
       </div>
-
-      <div class="form-group">
+      
+      <div class="form-group col-6">
         <input id="lastname" type="text" class="form-control validate" name="lastname" value="<%=data.lastname%>">
         <label for="lastname">Last Name</label>
       </div>
+    </div>
 
       <div class="form-group">
         <input id="email" type="email" class="form-control validate" name="email" value="<%=data.email%>">
         <label for="email">Email</label>
       </div>
+   
 
       <div class="form-group">
         <input id="password" type="password" class="form-control validate" name="password">
@@ -33,10 +37,9 @@
     </form>
   </div>
 
-  <div class="text-center">
+  <div class="text-center d-flex flex-column align-items-center card bg-light col-7 border-light m-2 p-3">
     <h1>Login with Facebook</h1>
-
-      <a href="/auth/facebook" class="btn btn-primary" >Facebook Login <i class="fa fa-facebook" aria-hidden="true"></i></a>
+      <a href="/auth/facebook" class="btn btn-primary" >Facebook Login <i class="fab fa-facebook-f" aria-hidden="true"></i></a>
 
   </div>
 

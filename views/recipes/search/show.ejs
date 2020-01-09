@@ -1,5 +1,6 @@
 <% let cookPrepTime = recipe.totalTime ? recipe.totalTime : time %>
 
+<div class="bg-light recipe-background">
 <h1><%= recipe.label %></h1>
 <h3 class="source"><a class="text-info" href="<%= recipe.url %>"><%= recipe.source %></a></h3>
 
@@ -22,9 +23,14 @@
 
     <div class="col-8 ingredients">
         <h4>Ingredients</h4>
-        <% recipe.ingredients.forEach(ingredient => {%>
-            <p><%=ingredient.text%></p>
-        <%})%>
+        <% if(ingredients) {%>
+          <% recipe.ingredients.forEach(ingredient => {%>
+              <p><%=ingredient.text%></p>
+          <%})%>
+        <%} else {%>
+            <p>No ingredients available, please visit <a href="<%=recipe.url%>"><%= recipe.source %></a> for more information.</p>
+        <%}%>
+
     </div>    
 </div>
 
@@ -57,15 +63,15 @@
             <input type="hidden" name="source" value="<%= recipe.source %>">
             <input type="hidden" name="sourceUrl" value="<%= recipe.url %>">
             <input type="hidden" name="imageUrl" value="<%= recipe.image %>">
-            <input type="hidden" name="time" value="<%= cookPrepTime %>">
-            <input type="hidden" name="servings" value="<%= recipe.yield %>">
+            <input type="hidden" name="time" value="<%= Math.ceil(cookPrepTime) %>">
+            <input type="hidden" name="servings" value="<%= Math.floor(recipe.yield) %>">
             <input type="hidden" name="ingredients" value="<%= JSON.stringify(recipe.ingredients) %>">
             <input type="hidden" name="instructionsText" value="<%= instructionsText %>">
             <input type="hidden" name="instructions" value="<%= JSON.stringify(instructionsObj)%>">
             <input type="hidden" name="types" value="<%= JSON.stringify(types) %>">
             <input type="hidden" name="diet" value="<%= JSON.stringify(recipe.dietLabels) %>">
             <input type="hidden" name="health" value="<%= JSON.stringify(recipe.healthLabels) %>">
-            <input type="hidden" name="calories" value="<%= recipe.calories %>">
+            <input type="hidden" name="calories" value="<%= Math.ceil(recipe.calories) %>">
 
             <div id="add-categories">
                 
@@ -93,4 +99,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

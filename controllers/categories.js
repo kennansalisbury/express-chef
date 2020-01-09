@@ -1,6 +1,7 @@
 let router = require('express').Router()
 let db = require('../models')
 let async = require('async')
+let cloudinary = require('cloudinary')
 
 //middleware to confirm user logged in
 let isLoggedIn = require('../middleware/isLoggedIn')
@@ -15,8 +16,8 @@ const findOrCreateCategories = (categories, recipe, wasCreated, res) => {
             db.category.findOrCreate({
                 where: {
                     name: c.trim(),
-                    // userId: req.user.id}
-                    userId: 2 }
+                    userId: req.user.id}
+                    // userId: 2 }
             })
             .then(([category, wasCreated]) => {
                 recipe.addCategory(category)
@@ -122,9 +123,9 @@ router.get('/test', (req, res) => {
 router.get('/', (req, res) => {
 
     db.category.findAll({
-        // where: {userId: req.user.id}
-        where: {userId: 2},
-        include: [db.user]
+        where: {userId: req.user.id},
+        // where: {userId: 2},
+        include: [db.recipe]
     })
     .then(categories => {
         res.render('categories/index.ejs', {categories})
@@ -139,7 +140,10 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
 
     db.category.findOne({
-        where: {id: req.params.id},
+        where: {id: req.params.id,
+                userId: req.user.id
+                // userId: 2
+        },
         include: [db.recipe]
     })
     .then(category => {

@@ -1,22 +1,50 @@
-<h1>Show 1 Saved Recipe</h1>
+<% let ingredients = JSON.parse(recipe.ingredientsObj) %>
+<% let instructions = JSON.parse(recipe.instructionsObj) %>
 
+<div class="bg-light recipe-background">
 <%if(recipeWasCreated && recipeWasCreated === 'false') {%>
-    <p>You already had this recipe saved! But we've added it to any new categories you might have included this time.</p>
+    <p>FYI: You already had this recipe saved! But we've added it to any new categories you might have included this time.</p>
 <%}%>
 
-<h2><%= recipe.title %> </h2>
+<h1><%= recipe.title %></h1>
+<h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>"><%= recipe.source %></a></h3>
 
-<% if(recipe.ingredients) {%>
-    <% let ingredients = JSON.parse(recipe.ingredients) %>
-    <p><%= ingredients[0].text %></p>
-<%}%>
+<ul class="list-group list-group-horizontal mb-3">
+    <li class="list-group-item">
+    <% for (let x=0; x < recipe.servings; x++) {%>
+            <i class="fas fa-user"></i>
+            <%}%>
+        Serves <strong><%=recipe.servings%></strong> ppl
+    </li>
+  <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= recipe.time %></strong> minutes</li>
+  <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
+</ul>
 
+
+<div class="row">
+    <div class="col-sm one-recipe-img">
+        <img class="img-fluid p-2" src="<%=recipe.imageUrl %>">
+    </div>
+
+    <div class="col-8 ingredients">
+        <h4>Ingredients</h4>
+        <% ingredients.forEach(ingredient => {%>
+            <p><%=ingredient.text%></p>
+        <%})%>
+    </div>    
+</div>
+
+<div class="container">
+    <h4>Instructions</h4>
+    <% instructions[0].steps.forEach(step => {%>
+        <p><%=step.number%>. <%=step.step%></p>
+    <%})%>
+</div>
 
 <% if(categories.length) {%>
-    <p> Categories:</p>
-    <ul class="list-group list-group-horizontal">
     <%categories.forEach(category => {%>
-       <li class="list-group-item"> <%=category.name%> </li>
+       <a class="btn btn-info" href="/categories/<%=category.id%>"> <%=category.name%> </a>
     <%})%>
     </ul>
 <%}%>
+</div>

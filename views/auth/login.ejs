@@ -1,6 +1,6 @@
-<div class="d-flex justify-content-around">
-    <div>
-        <h1>Log In Here</h1>
+<div class="d-flex flex-column justify-content-around align-items-center bgimage-home">
+    <div class="card bg-light col-5 border-light m-2 p-3">
+        <h1>Log in with Email</h1>
 
         <form method="POST" action="/auth/login"> 
             <div class="form-group">         
@@ -14,11 +14,15 @@
         
             <button type="submit" name="action" class="btn btn-dark">Log In</button>
         </form>
+        <br>
+        <p>Not signed up? Sign Up with Email <a href="/auth/signup">here</a>, <br> or log in with your Facebook account </p>
     </div>
 
-    <div class="text-center">
+    <div class="text-center d-flex flex-column align-items-center card bg-light col-5 border-light m-2 p-3">
         <h1>Facebook Login</h1>
+        <a href="/auth/facebook" class="btn btn-primary mt-4" style="max-width: 200px;">Facebook Login  <i class="fab fa-facebook-f"></i></a>
 
-        <a href="/auth/facebook" class="btn btn-primary" >Facebook Login <i class="fa fa-facebook" aria-hidden="true"></i></a>
     </div>
+
 </div>
+

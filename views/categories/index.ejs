@@ -1,5 +1,16 @@
-<h1>Show all Categories</h1>
 
-<% categories.forEach(category => { %>
-    <a href="/categories/<%=category.id%>"><%= category.name %> </a>
+
+<div class="row">
+<%categories.forEach(category => { %>
+    <a href="/categories/<%=category.id%>">
+        <div class="card bg-light text-white col-3 border-light m-2" style="max-width: 300px;">
+            <img src="<%=category.recipes[0].imageUrl%>" class="card-img" alt="sample-recipe-image" style="max-width: 300px;">
+            <div class="card-img-overlay d-flex flex-column justify-content-center">
+                <h1 class="card-title bg-dark text-center"><%=category.name%></h1>
+            </div>
+        </div>
+    </a>
+    
 <% }) %>
+
+</div>

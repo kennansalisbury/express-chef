@@ -1,5 +1,6 @@
 let router = require('express').Router()
 let isLoggedIn = require('../middleware/isLoggedIn')
+let cloudinary = require('cloudinary')
 
 //GET /profile
 router.get('/', isLoggedIn, (req, res) => {

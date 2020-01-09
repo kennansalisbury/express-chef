@@ -1,9 +1,8 @@
 //Create express router object
 let router = require('express').Router()
-
 let db = require('../models')
-
 let passport = require('../config/passportConfig')
+let cloudinary = require('cloudinary')
 
 // Define routes
 router.get('/login', (req, res) => {
