@@ -1,6 +1,13 @@
 <h1>Search for Recipe</h1>
 
 <form method="GET" action="/recipes/search/results">
-    <input type="text" placeholder="Enter keywords here" name="search" value="">
-    <input type="submit">
+    <div class="input-group mb-3 col-4">
+        
+            <input class="form-control" type="search" placeholder="Enter keywords here" name="search" value="">
+    
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-dark">Search</button>
+        </div>
+
+    </div>
 </form>

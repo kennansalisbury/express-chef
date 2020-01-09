@@ -2,6 +2,7 @@
 
 <%if(!recipes.length){%>
     <p>No recipes saved currently</p>
+    <a href="/recipes/search" class="btn btn-info">Search for Recipes</a>
 <%} else {%>
 
 <% recipes.forEach(recipe => { %>
@@ -20,7 +21,6 @@
         </div>
     </div>
 <% }) %>
-
+<a class="btn btn-info" href="/categories">View By Category</a>
 <%}%>
 
-<a class="btn btn-info" href="/categories">View By Category</a>
