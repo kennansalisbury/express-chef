@@ -1,12 +1,9 @@
-<% let ingredients = JSON.parse(recipe.ingredientsObj) %>
-<% let instructions = JSON.parse(recipe.instructionsObj) %>
-
 <div class="bg-light recipe-background">
 <%if(recipeWasCreated && recipeWasCreated === 'false') {%>
     <p>FYI: You already had this recipe saved! But we've added it to any new categories you might have included this time.</p>
 <%}%>
 
-<h1><%= recipe.title %></h1>
+<h1><%= recipe.title != 'null' ? recipe.title : "unavailable" %></h1>
 <h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>"><%= recipe.source %></a></h3>
 
 <ul class="list-group list-group-horizontal mb-3">
@@ -28,17 +25,32 @@
 
     <div class="col-8 ingredients">
         <h4>Ingredients</h4>
-        <% ingredients.forEach(ingredient => {%>
-            <p><%=ingredient.text%></p>
+        <% if(recipe.ingredientsObj != 'null') {%>
+            <% let ingredients = JSON.parse(recipe.ingredientsObj) %>
+            <% ingredients.forEach(ingredient => {%>
+                <p><%=ingredient.text%></p>
         <%})%>
+        <%} else {%>
+            <p>No ingredients available, please visit <a href="<%=recipe.sourceUrl%>"><%= recipe.source %></a> for more information.</p>
+        <%}%>
     </div>    
 </div>
 
 <div class="container">
     <h4>Instructions</h4>
-    <% instructions[0].steps.forEach(step => {%>
-        <p><%=step.number%>. <%=step.step%></p>
-    <%})%>
+    <% if(recipe.instructionsObj != 'null') {%>
+        <% console.log(recipe.instructionsObj != 'null')%>
+        <% let instructions = JSON.parse(recipe.instructionsObj) %>
+        <% instructions[0].steps.forEach(step => {%>
+            <p><%=step.number%>. <%=step.step%></p>
+        <%})%>
+    <%} else if (recipe.instructionsObj != 'null' && recipe.instructionsText) {%>
+        <p><%=recipe.instructionsText%></p>
+
+    <%} else {%>
+        <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>"><%= recipe.source %></a> for more information.</p>
+    <%}%>
+
 </div>
 
 <% if(categories.length) {%>

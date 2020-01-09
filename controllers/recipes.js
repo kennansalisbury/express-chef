@@ -33,12 +33,17 @@ router.get('/search/results', (req, res) => {
 // GET /recipes/search/result - show 1 selected search result from API
 router.get('/search/result', (req, res) => {
     let r = encodeURIComponent(req.query.url)
+
+    console.log(`🥥🥥🥥🥥 https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
+
     //get recipe data to show from edamam
     axios.get(`https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
     .then(response => {
         // console.log(response.data[0])
        
         let edamamRecipeUrl = response.data[0].url
+
+        console.log(`🥥🥥🥥🥥 https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
         
         //put recipe URL through spoonacular api to recieve instructions
         axios.get(`https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
