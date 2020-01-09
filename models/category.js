@@ -4,8 +4,14 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {});
   category.associate = function(models) {
-    models.category.belongsTo(models.user)
-    models.category.belongsToMany(models.recipe, {through: 'recipes_categories'})
+    models.category.belongsTo(models.user, {
+      onDelete: 'CASCADE'
+    })
+    models.category.belongsToMany(models.recipe, {
+      through: 'recipes_categories',
+      hooks: true,
+      onDelete: 'CASCADE'
+    })
   };
   return category;
 };

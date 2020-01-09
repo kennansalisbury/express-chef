@@ -9,10 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       recipeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE'
       },
       categoryId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

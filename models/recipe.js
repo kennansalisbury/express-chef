@@ -16,8 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     calories: DataTypes.INTEGER,
   }, {});
   recipe.associate = function(models) {
-    models.recipe.belongsToMany(models.user, {through: 'user_savedrecipes'})
-    models.recipe.belongsToMany(models.category, {through: 'recipes_categories'})
+    models.recipe.belongsToMany(models.user, {
+      through: 'user_savedrecipes',
+      onDelete: 'CASCADE'
+    })
+    models.recipe.belongsToMany(models.category, {
+      through: 'recipes_categories',
+      onDelete: 'CASCADE'
+    })
   };
   return recipe;
 };

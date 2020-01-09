@@ -1,5 +1,8 @@
 <h1 class="text-secondary">Your <span class="text-dark"><%=category.name%></span> recipes </h1>
 
+<a class="btn btn-info mb-1" href="/categories">View All Categories</a>
+<a class="btn btn-info mb-1" href="/recipes">View All Saved Recipes</a>
+
 <%if(!recipes.length){%>
     <p>No recipes saved in this category currently</p>
 <%} else {%>
@@ -23,5 +26,9 @@
 
 <%}%>
 
-<a class="btn btn-info" href="/categories">View All Categories</a>
-<a class="btn btn-info" href="/recipes">View All Saved Recipes</a>
+<form action="/categories/<%=category.id%>/?_method=DELETE" method="POST">
+    <input class="btn btn-success" type="submit" value="Delete this category">
+    <small class="form-text text-muted">Any recipes associated with this category will still remain in your saved recipes library.</small>
+</form>
+
+

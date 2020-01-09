@@ -55,8 +55,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   user.associate = function(models) {
-    models.user.hasMany(models.category)
-    models.user.belongsToMany(models.recipe, {through: 'user_savedrecipes'})
+    models.user.hasMany(models.category, {
+      onDelete: 'CASCADE'
+    })
+    models.user.belongsToMany(models.recipe, {
+      through: 'user_savedrecipes',
+      onDelete: 'CASCADE'
+    })
   };
   
   user.prototype.validPassword = function(typedInPassword) {

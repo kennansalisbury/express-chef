@@ -5,6 +5,7 @@ let layouts = require('express-ejs-layouts')
 let flash = require('connect-flash')
 let session = require('express-session')
 let cloudinary = require('cloudinary')
+let methodOverride = require('method-override')
 
 // Declare express app varaiable
 let app = express()
@@ -15,6 +16,7 @@ let passport = require('./config/passportConfig')
 app.set('view engine', 'ejs')
 app.use(layouts)
 app.use('/', express.static('static'))
+app.use(methodOverride('_method'))
 app.use(express.urlencoded({extended: false}))
 app.use(session({
     secret: process.env.SESSION_SECRET
