@@ -80,15 +80,15 @@ router.get('/search/result', (req, res) => {
     //FOR TESTING FRONT-END
     db.category.findAll({
         // where: {userId: req.user.id}
-        where: {userId: 5}
+        where: {userId: 2}
     })
     .then(categories => {
         res.render('recipes/search/show.ejs', {
             recipe: {
-                label: 'Recipe Name',
+                label: 'CHICKEN AND BURGERS',
                 image: 'https://www.edamam.com/web-img/42f/42f1805b2273113c029b41adadd36847.jpg',
                 source: 'Recipe Source',
-                url: 'http://www.google.com',
+                url: 'http://www.testwebsite.com',
                 yield: 3,
                 dietLabels: [
                     "Low-Fat"
@@ -208,6 +208,35 @@ router.get('/search/result', (req, res) => {
     })
 
 
+
+//FOR TESTING - NEED UPDATED USER ID
+const findOrCreateCategories = (categories, recipe, wasCreated, res) => {
+    if(categories.length){
+        async.forEach(categories, (c, done) => {
+            db.category.findOrCreate({
+                where: {
+                    name: c.trim().toLowerCase(),
+                    // userId: req.user.id}
+                    userId: 2 }
+            })
+            .then(([category, wasCreated]) => {
+                recipe.addCategory(category)
+                .then(() => {
+                    done()
+                })
+                .catch(done)
+            })
+            .catch(done)
+        }, 
+        () => {
+            //once finished adding categories, redirect to recipe
+            res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+        })
+    } else {
+        res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+    }
+}
+
 //POST /recipes - save a recipe to db
 router.post('/', (req, res) => {
     let categories = []
@@ -224,68 +253,88 @@ router.post('/', (req, res) => {
 
 
     // find or create recipe
-    db.recipe.findOrCreate({
+    db.recipe.findOne({
         where: {
-            sourceUrl: req.body.sourceUrl,
-        },
-        // include: [db.user, {
-        //     where: {}
-        // }],
-        defaults: {
-            title: req.body.title,
-            source: req.body.source,
-            imageUrl: req.body.imageUrl,
-            time: req.body.time,
-            servings: req.body.servings,
-            ingredientsText: req.body.ingredientsText,
-            ingredientsObj: req.body.ingredients,
-            instructionsText: req.body.instructionsText,
-            instructionsObj: req.body.instructions,
-            dishTypes: req.body.types,
-            dietLabels: req.body.diet,
-            healthLabels: req.body.health,
-            calories: req.body.calories,
+            sourceUrl: req.body.sourceUrl
         }
     })
-    .then(([recipe, wasCreated]) => {
-        console.log(wasCreated? recipe.title + ' was created' : recipe.title + ' was already found')
-        // db.user.findByPk(req.user.id)
-        db.user.findByPk(5)
-        .then(user => {
-            user.addRecipe(recipe)
-        })
-        .catch(err => {
-            console.log('🟣' + err)
-            res.render('error')
-        })
+    .then(recipe => {
+        //if recipe does not exist - create recipe, add user association and findorcreate categories
+        if(!recipe) {
+            db.recipe.create({
+                title: req.body.title,
+                source: req.body.source,
+                sourceUrl: req.body.sourceUrl,
+                imageUrl: req.body.imageUrl,
+                time: req.body.time,
+                servings: req.body.servings,
+                ingredientsText: req.body.ingredientsText,
+                ingredientsObj: req.body.ingredients,
+                instructionsText: req.body.instructionsText,
+                instructionsObj: req.body.instructions,
+                dishTypes: req.body.types,
+                dietLabels: req.body.diet,
+                healthLabels: req.body.health,
+                calories: req.body.calories
+            })
+            .then(newRecipe => {
+                
+                //add user associations
 
-        //if there are categories, find or create
+                //db.user.findByPk(req.user.id)
+                db.user.findByPk(2)
+                .then(user => {
+                    user.addRecipe(newRecipe)
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.render('error')
+                })
+                let wasCreated = true
+                //findorcreate categories
+                findOrCreateCategories(categories, newRecipe, wasCreated, res)
 
-        if(categories.length){
-            async.forEach(categories, (c, done) => {
-                db.category.findOrCreate({
-                    where: {
-                        name: c.trim(),
-                        // userId: req.user.id}
-                        userId: 5 }
-                })
-                .then(([category, wasCreated]) => {
-                    recipe.addCategory(category)
-                    .then(() => {
-                        done()
-                    })
-                    .catch(done)
-                })
-                .catch(done)
-            }, 
-            () => {
-                //once finished adding categories, redirect to recipe
-                res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+            })
+            .catch(err => {
+                console.log(err)
+                res.render('error')
             })
         } else {
-            res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+            //else (recipe does exist) - check if associated with current user
+            let wasCreated
+
+            //recipe.hasUser(req.user.id)
+            recipe.hasUser(2)
+            .then(hasUser => {
+                
+
+                //if not associated with current user - add user associations
+                if(!hasUser){
+                    wasCreated = true
+
+                    //db.user.findByPk(req.user.id)
+                    db.user.findByPk(2)
+                    .then(user => {
+                        user.addRecipe(recipe)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        res.render('error')
+                    })
+                } else {
+                    wasCreated = false
+                }
+
+                //whether associated with user or not, findorcreate categories
+
+                findOrCreateCategories(categories, recipe, wasCreated, res)
+
+            })
+
         }
-    })
+
+    }) 
+    
     .catch(err => {
         console.log(err)
         res.render('error')
@@ -329,10 +378,30 @@ router.get('/:id', (req, res) => {
         //if connected to current user, show - else, show error page
 
         // recipe.hasUser(req.user.id)
-        recipe.hasUser(5)
+        recipe.hasUser(2)
         .then(hasUser => {
             if(hasUser) {
-                res.render('recipes/show.ejs', {recipe, recipeWasCreated})
+                //if user associated with recipe, check each category for user and push to new array if associated with current user
+                let currentUserRecipeCategories = []
+                async.forEach(recipe.categories, (c, done) => {    
+                    db.category.findOne({
+                        where: {
+                            id: c.id,
+                            // userId: req.user.id
+                            userId: 2
+                        }
+                    })
+                    .then(category => {
+                        if(category) {
+                            currentUserRecipeCategories.push(category)
+                        }
+                        done()
+                    })
+                    .catch(done)
+                }, () => {
+                    console.log('🧀🧀🧀🧀' + currentUserRecipeCategories + '🧀🧀🧀🧀')
+                    res.render('recipes/show.ejs', {recipe: recipe, categories: currentUserRecipeCategories, recipeWasCreated})
+                })
             }
             else {
                 res.render('error')

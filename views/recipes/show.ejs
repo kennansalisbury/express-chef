@@ -11,9 +11,12 @@
     <p><%= ingredients[0].text %></p>
 <%}%>
 
-<% if(recipe.categories.length) {%>
-    <%recipe.categories.forEach(category => {%>
-        <p><%=category.name%></p>
-        
+
+<% if(categories.length) {%>
+    <p> Categories:</p>
+    <ul class="list-group list-group-horizontal">
+    <%categories.forEach(category => {%>
+       <li class="list-group-item"> <%=category.name%> </li>
     <%})%>
+    </ul>
 <%}%>

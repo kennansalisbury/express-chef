@@ -1,21 +1,163 @@
 let router = require('express').Router()
 let db = require('../models')
+let async = require('async')
 
 //middleware to confirm user logged in
 let isLoggedIn = require('../middleware/isLoggedIn')
 
-//FOR TESTING
+
+
+
+//FOR TESTING - NEED UPDATED USER ID
+const findOrCreateCategories = (categories, recipe, wasCreated, res) => {
+    if(categories.length){
+        async.forEach(categories, (c, done) => {
+            db.category.findOrCreate({
+                where: {
+                    name: c.trim(),
+                    // userId: req.user.id}
+                    userId: 2 }
+            })
+            .then(([category, wasCreated]) => {
+                recipe.addCategory(category)
+                .then(() => {
+                    done()
+                })
+                .catch(done)
+            })
+            .catch(done)
+        }, 
+        () => {
+            //once finished adding categories, redirect to recipe
+            res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+        })
+    } else {
+        res.redirect('/recipes/' + recipe.id +'/?wasCreated=' + wasCreated)
+    }
+}
+
 router.get('/test', (req, res) => {
+    //check for categories and create array if exist for use later in function
+    let categories = ['newcat1', '3newcat', '4newcat', 'anothercategory']
+  
+    //check dB for recipe by sourceUrl
+    db.recipe.findOne({
+        where: {
+            sourceUrl: 'http://www.puppy.com'
+        }
+    })
+    .then(recipe => {
+        //if recipe does not exist - create recipe, add user association and findorcreate categories
+        if(!recipe) {
+            db.recipe.create({
+                title: 'test291832',
+                source: 'test',
+                sourceUrl: 'http://www.puppy.com',
+                imageUrl: 'test',
+                time: 1,
+                servings: 1
+            })
+            .then(newRecipe => {
+                
+                //add user associations
+                db.user.findByPk(2)
+                .then(user => {
+                    user.addRecipe(newRecipe)
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.render('error')
+                })
+                let wasCreated = true
+                //findorcreate categories
+                findOrCreateCategories(categories, newRecipe, wasCreated, res)
 
-    // db.recipe.findOne({
-    //     where: {
-    //         sourceUrl: req.body.sourceUrl,
-    //     },
-    //     include: [db.user, {
-    //         where: {url}
-    //     }],
-    // })
+            })
+            .catch(err => {
+                console.log(err)
+                res.render('error')
+            })
+        } else {
+            //else (recipe does exist) - check if associated with current user
+            let wasCreated
 
+            recipe.hasUser(2)
+            .then(hasUser => {
+                
+
+                //if not associated with current user - add user associations
+                if(!hasUser){
+                    wasCreated = true
+                    db.user.findByPk(2)
+                    .then(user => {
+                        user.addRecipe(recipe)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        res.render('error')
+                    })
+                } else {
+                    wasCreated = false
+                }
+
+                //whether associated with user or not, findorcreate categories
+
+                findOrCreateCategories(categories, recipe, wasCreated, res)
+
+            })
+
+        }
+
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
+})
+
+
+
+
+// GET /categories - show all categories for current user
+router.get('/', (req, res) => {
+
+    db.category.findAll({
+        // where: {userId: req.user.id}
+        where: {userId: 2},
+        include: [db.user]
+    })
+    .then(categories => {
+        res.render('categories/index.ejs', {categories})
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    })
+})
+
+// GET /categories/:id - show all recipes in 1 category
+router.get('/:id', (req, res) => {
+
+    db.category.findOne({
+        where: {id: req.params.id},
+        include: [db.recipe]
+    })
+    .then(category => {
+        res.render('categories/show.ejs', {category: category, recipes: category.recipes})
+    })
+    .catch(err => {
+        console.log(err)
+        res.render('error')
+    }) 
+})
+
+module.exports = router
+
+
+    // findOrCreateCategories(categories, recipe)
+ 
+
+   
 
 
     // db.recipe.findByPk(1)
@@ -45,11 +187,11 @@ router.get('/test', (req, res) => {
         //     console.log(err)
         //     res.render('error')
         // }) 
-    })
-    .catch(err => {
-        console.log(err)
-        res.render('error')
-    })
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    //     res.render('error')
+    // })
     
     // db.recipe.findAll({
     //     include: [{
@@ -64,40 +206,4 @@ router.get('/test', (req, res) => {
     //     console.log(err)
     //     res.render('error')
     // })
-})
-
-
-// GET /categories - show all categories for current user
-router.get('/', (req, res) => {
-
-    db.category.findAll({
-        // where: {userId: req.user.id}
-        where: {userId: 5},
-        include: [db.user]
-    })
-    .then(categories => {
-        res.render('categories/index.ejs', {categories})
-    })
-    .catch(err => {
-        console.log(err)
-        res.render('error')
-    })
-})
-
-// GET /categories/:id - show all recipes in 1 category
-router.get('/:id', (req, res) => {
-
-    db.category.findOne({
-        where: {id: req.params.id},
-        include: [db.recipe]
-    })
-    .then(category => {
-        res.render('categories/show.ejs', {category: category, recipes: category.recipes})
-    })
-    .catch(err => {
-        console.log(err)
-        res.render('error')
-    }) 
-})
-
-module.exports = router
+// })
