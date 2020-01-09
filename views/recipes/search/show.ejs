@@ -28,7 +28,7 @@
               <p><%=ingredient.text%></p>
           <%})%>
         <%} else {%>
-            <p>No ingredients available, please visit <a href="<%=recipe.url%>"><%= recipe.source %></a> for more information.</p>
+            <p>No ingredients available, please visit <a href="<%=recipe.url%>" target="_blank"><%= recipe.source %></a> for more information.</p>
         <%}%>
 
     </div>    
@@ -43,7 +43,7 @@
     <%} else if (!instructionsObj.length && instructionsText) {%>
         <p><%=instructionsText%></p>
     <%} else {%>
-        <p>No instructions available, please visit <a href="<%=recipe.url%>"><%= recipe.source %></a> for more information.</p>
+        <p>No instructions available, please visit <a href="<%=recipe.url%>" target="_blank"><%= recipe.source %></a> for more information.</p>
     <%}%>
 </div>
 
