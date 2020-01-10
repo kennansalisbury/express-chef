@@ -11,7 +11,6 @@ router.get('/login', (req, res) => {
 
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/profile/home',
-    successFlash: 'Yay, we logged in!',
     failureRedirect: '/auth/login',
     failureFlash: 'Invalid credentials'
 }))
@@ -35,13 +34,12 @@ router.post('/signup', (req, res, next) => {
                 // automatically log in the user to their newly created account
                 passport.authenticate('local', {
                     successRedirect: '/profile/home',
-                    successFlash: 'Yay, we logged in!',
                     failureRedirect: '/auth/login',
-                    failureFlash: 'this should not happen'
+                    failureFlash: 'error: login unsucessful, try again'
                 }) (req, res, next)
             } else {
                 //the user already has an account
-                req.flash('error', 'Account already exists - go to the login page')
+                req.flash('error', 'Account already exists - please log in below')
                 res.redirect('/auth/login')
             }
         })
@@ -66,7 +64,6 @@ router.post('/signup', (req, res, next) => {
 
 router.get('/logout', (req, res) => {
     req.logout() // Throw away session data of logged in user
-    req.flash('success', 'Goodbye!')
     res.redirect('/')
 })
 
@@ -80,7 +77,6 @@ router.get('/facebook', passport.authenticate('facebook', {
 //route facebook uses (callback url):
 router.get('/callback/facebook', passport.authenticate('facebook', {
     successRedirect: '/profile/home',
-    successFlash: 'Facebook login successful',
     failureRedirect: '/auth/login',
     failureFlash: 'Facebook login failed'
 }))

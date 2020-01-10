@@ -80,6 +80,53 @@ router.get('/search/result', isLoggedIn, (req, res) => {
 
 })
 
+// GET /recipes/add - show input URL to extract recipe
+router.get('/add', isLoggedIn, (req, res) => {
+    res.render('recipes/add/new')
+})
+
+// GET /recipes/add/result - show extracted recipe for confirmation before saving
+router.get('/add/result', isLoggedIn, (req, res) => {
+    
+    axios.get(`https://api.spoonacular.com/recipes/extract?url=${req.query.url}&apiKey=${process.env.SPOON_API_KEY}`)
+        .then(spoonData => {
+            //find all existing categories to pass through
+            db.category.findAll({
+                    where: {userId: req.user.id}
+                })
+            .then(categories => {
+                let ingredientsObj = []
+                spoonData.data.extendedIngredients.forEach(ingredient => {
+                    ingredientsObj.push({
+                        text: ingredient.original
+                    })
+                })
+                //render show page with edamam and spoonacular data and existing categories for user
+                res.render('recipes/add/show', {
+                    recipe: {
+                        title: spoonData.data.title,
+                        source: spoonData.data.sourceName,
+                        sourceUrl: req.query.url,
+                        imageUrl: spoonData.data.image,
+                        time: spoonData.data.readyInMinutes,
+                        servings: spoonData.data.servings ,
+                        ingredientsObj: ingredientsObj,
+                        instructionsText: spoonData.data.instructions, 
+                        dishTypes: spoonData.data.dishTypes,
+                        dietLabels: spoonData.data.diets,
+                        healthLabels: spoonData.data.diets
+                    },
+                    categories: categories
+                })
+            }).catch(err => {
+                console.log(err)
+                res.render('error')
+            })
+        }).catch(err => {
+            console.log(err)
+            res.render('error')
+        })
+})
 
 //POST /recipes - save a recipe to db
 router.post('/', isLoggedIn, (req, res) => {
