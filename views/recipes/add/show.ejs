@@ -6,10 +6,10 @@
 <p>Here's what we found. Click save if you'd like to save to your saved recipes.</p>
 
 <div class="bg-light recipe-background">
-  <h1><%= recipe.title != 'null' ? recipe.title : "info unavailable" %></h1>
+  <h1><%= recipe.title != "null" ? recipe.title : "info unavailable" %></h1>
 
 
-  <h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>" target="_blank"><%= recipe.source != 'null' ? recipe.source : "info unavailable" %></a></h3>
+  <h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>" target="_blank"><%= recipe.source != "null" ? recipe.source : "info unavailable" %></a></h3>
 
 <ul class="list-group list-group-horizontal mb-3">
     
@@ -68,17 +68,17 @@
       </div>
       <div class="modal-body">
         <form id="save-form" method="POST" action="/recipes">
-            <input type="hidden" name="title" value="<%= recipe.title ? recipe.title : 'null' %>">
-            <input type="hidden" name="source" value="<%= recipe.source ? recipe.source : 'null' %>">
-            <input type="hidden" name="sourceUrl" value="<%= recipe.sourceUrl ? recipe.sourceUrl : 'null' %>">
-            <input type="hidden" name="imageUrl" value="<%= recipe.imageUrl ? recipe.imageUrl : 'null' %>">
+            <input type="hidden" name="title" value="<%= recipe.title ? recipe.title : "null" %>">
+            <input type="hidden" name="source" value="<%= recipe.source ? recipe.source : "null" %>">
+            <input type="hidden" name="sourceUrl" value="<%= recipe.sourceUrl ? recipe.sourceUrl : "null" %>">
+            <input type="hidden" name="imageUrl" value="<%= recipe.imageUrl ? recipe.imageUrl : "null" %>">
             <input type="hidden" name="time" value="<%= recipe.time ? Math.ceil(recipe.time) : 0%>">
             <input type="hidden" name="servings" value="<%= recipe.servings ? Math.floor(recipe.servings) : 0%>">
-            <input type="hidden" name="ingredients" value="<%= recipe.ingredientsObj.length ? JSON.stringify(recipe.ingredientsObj) : 'null' %>">
-            <input type="hidden" name="instructionsText" value="<%= recipe.instructionsText ? recipe.instructionsText : 'null' %>">
-            <input type="hidden" name="types" value="<%= recipe.dishTypes.length ? JSON.stringify(recipe.dishTypes) : 'null' %>">
-            <input type="hidden" name="diet" value="<%= recipe.dietLabels.length ? JSON.stringify(recipe.dietLabels) : 'null' %>">
-            <input type="hidden" name="health" value="<%= recipe.healthLabels.length ? JSON.stringify(recipe.healthLabels.length) : 'null' %>">
+            <input type="hidden" name="ingredients" value="<%= recipe.ingredientsObj.length ? JSON.stringify(recipe.ingredientsObj) : "null" %>">
+            <input type="hidden" name="instructionsText" value="<%= recipe.instructionsText ? recipe.instructionsText : "null" %>">
+            <input type="hidden" name="types" value="<%= recipe.dishTypes.length ? JSON.stringify(recipe.dishTypes) : "null" %>">
+            <input type="hidden" name="diet" value="<%= recipe.dietLabels.length ? JSON.stringify(recipe.dietLabels) : "null" %>">
+            <input type="hidden" name="health" value="<%= recipe.healthLabels.length ? JSON.stringify(recipe.healthLabels.length) : "null" %>">
             <input type="hidden" name="calories" value="<%=0%>">
             
 
