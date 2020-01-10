@@ -16,7 +16,7 @@
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title"><%= recipe.title %></h5>
-                    <p class="card-text"><%= recipe.source %></p>
+                    <p class="card-text"><%= recipe.source != "null" ? recipe.source : "info unavailable" %></p>
                     <div class="row">
                         <a href="/recipes/<%= recipe.id%>" class="btn btn-danger col-4">View Full Recipe</a>
                         <form action="/recipes/<%=recipe.id%>/?_method=DELETE" class="col-4" method="POST">

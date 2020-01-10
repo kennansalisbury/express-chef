@@ -67,16 +67,16 @@
 
 <div class="container">
     <h4>Instructions</h4>
-    <% if(recipe.instructionsObj != "null") {%>
+    <% if(recipe.instructionsObj != "null" && recipe.instructionsObj) {%>
         <% let instructions = JSON.parse(recipe.instructionsObj) %>
         <% instructions[0].steps.forEach(step => {%>
             <p><%=step.number%>. <%=step.step%></p>
         <%})%>
-    <%} else if (recipe.instructionsObj === "null" && recipe.instructionsText != "null") {%>
+    <%} else if (recipe.instructionsText != "null") {%>
         <p><%=recipe.instructionsText%></p>
 
     <%} else {%>
-        <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source %></a> for more information.</p>
+        <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source != "null" ? recipe.source : "info unavailable" %></a> for more information.</p>
     <%}%>
 
 </div>

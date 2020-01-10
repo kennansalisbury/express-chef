@@ -1,13 +1,11 @@
+<%if(!recipes.length) {%>
+    <h1>Sorry, we can't find any results for <span class="text-secondary"><%=search%></span></h1>
+    <a href="/recipes/search">Try another search</a>
+<%} else {%>
+
 <h1 class="text-secondary">Results for: <span class="text-dark"><%=search%></span> </h1>
 
-<!-- FOR TESTING W/ NO API -->
-<!-- <form method="GET" action="/recipes/search/result">
-    <input type="submit" value="View">
-</form> -->
-<!-- FOR TESTING W/ NO API -->
 
-
-<% if(recipes) {%>
 <div class="container">
     <% recipes.forEach(recipe => { %>
 
