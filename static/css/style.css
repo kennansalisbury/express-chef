@@ -1,8 +1,13 @@
-body {
+.bg-img-home {
     height: 100vh;
     background: repeat center/100% url(https://res.cloudinary.com/ksalisbury/image/upload/v1578538654/lukas-blazek-f-TWhXOrLiU-unsplash_wqqym5.jpg);
 
 }
+
+/* .bg-img-plain {
+    height:100vh;
+    background: repeat center/100% url(../img/bg-solid.png);
+} */
 
 /* .bgimage-home {
     height: 100vh;
