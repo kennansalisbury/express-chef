@@ -40,8 +40,13 @@ app.use('/categories', require('./controllers/categories'))
 
 // Add home or catch-all routes
 app.get('/', (req, res) => {
-    let backgroundImg = cloudinary.url('sample.jpg')
-    res.render('home', {backgroundImg})
+    // let backgroundImg = cloudinary.url('sample.jpg')
+    // res.render('home', {backgroundImg})
+    if(!req.user){
+        res.render('home')
+    } else {
+        res.render('profile/home')
+    }
 })
 
 //error route - ALWAYS THE BOTTOM ROUTE

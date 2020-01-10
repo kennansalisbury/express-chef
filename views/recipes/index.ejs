@@ -5,6 +5,8 @@
     <a href="/recipes/search" class="btn btn-info">Search for Recipes</a>
 <%} else {%>
 
+<a class="btn btn-info mb-1" href="/categories">View By Category</a>
+
 <% recipes.forEach(recipe => { %>
     <div class="card mb-3" style="max-width: 640px;">
         <div class="row no-gutters">
@@ -15,12 +17,16 @@
                 <div class="card-body">
                     <h5 class="card-title"><%= recipe.title %></h5>
                     <p class="card-text"><%= recipe.source %></p>
-                    <a href="/recipes/<%= recipe.id%>" class="btn btn-secondary">View Full Recipe</a>
+                    <div class="row">
+                        <a href="/recipes/<%= recipe.id%>" class="btn btn-danger col-4">View Full Recipe</a>
+                        <form action="/recipes/<%=recipe.id%>/?_method=DELETE" class="col-4" method="POST">
+                            <input type="submit" class="btn btn-secondary" value="Delete Recipe">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 <% }) %>
-<a class="btn btn-info" href="/categories">View By Category</a>
 <%}%>
 

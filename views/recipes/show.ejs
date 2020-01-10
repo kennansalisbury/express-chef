@@ -22,6 +22,13 @@
     </li>
   <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= recipe.time %></strong> minutes</li>
   <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
+  <% if(categories.length) {%>
+    <li class="list-group-item"> <i class="fas fa-folder"></i> Categories: 
+        <%categories.forEach(category => {%>
+           <a class="btn btn-small btn-info p-0" href="/categories/<%=category.id%>"> <%=category.name%> </a>
+        <%})%> 
+    </li>
+  <%}%>
 </ul>
 
 
@@ -60,10 +67,5 @@
 
 </div>
 
-<% if(categories.length) {%>
-    <%categories.forEach(category => {%>
-       <a class="btn btn-info" href="/categories/<%=category.id%>"> <%=category.name%> </a>
-    <%})%>
-    </ul>
-<%}%>
+
 </div>

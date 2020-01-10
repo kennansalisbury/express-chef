@@ -1,7 +1,17 @@
 <h1 class="text-secondary">Your <span class="text-dark"><%=category.name%></span> recipes </h1>
 
-<a class="btn btn-info mb-1" href="/categories">View All Categories</a>
-<a class="btn btn-info mb-1" href="/recipes">View All Saved Recipes</a>
+
+<div class="row mb-1 ml-1">
+  <form action="/categories/<%=category.id%>/?_method=DELETE" method="POST">
+      <input class="btn btn-secondary m-1" type="submit" value="Delete Category">
+      <!--<small class="form-text text-muted">Any recipes associated with this category will still remain in your saved recipes library.</small>-->
+  </form>
+
+  <button type="button" class="btn btn-secondary m-1" data-toggle="modal" data-target="#exampleModalLong">
+  Edit Category
+  </button>
+</div>
+
 
 <%if(!recipes.length){%>
     <p>No recipes saved in this category currently</p>
@@ -17,7 +27,13 @@
                     <div class="card-body">
                         <h5 class="card-title"><%= recipe.title %></h5>
                         <p class="card-text"><%= recipe.source %></p>
-                        <a href="/recipes/<%= recipe.id%>" class="btn btn-secondary">View Full Recipe</a>
+                        <div class="row">
+                          <a href="/recipes/<%= recipe.id%>" class="btn btn-danger col-4 ml-2">View Full Recipe</a>
+                          <form class="col-sm" action="/categories/<%=category.id%>/remrec/?_method=DELETE" method="POST">
+                              <input type="hidden" name="id" value="<%=recipe.id%>">
+                              <button class="btn btn-secondary" type="submit">Remove from "<%=category.name%>"</button>
+                          </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -26,16 +42,7 @@
 
 <%}%>
 
-<div class="row">
-    <form action="/categories/<%=category.id%>/?_method=DELETE" method="POST">
-        <input class="btn btn-danger" type="submit" value="Delete Category">
-        <!--<small class="form-text text-muted">Any recipes associated with this category will still remain in your saved recipes library.</small>-->
-    </form>
 
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalLong">
-    Edit Category
-    </button>
-</div>
 
 
 <!--MODAL-->
