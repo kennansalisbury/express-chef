@@ -6,7 +6,7 @@
       
       <div class="row">
       <div class="form-group  col-6">
-        <input id="firstname" type="text" class="form-control validate" name="firstname" value="<%=data.firstname%>">
+        <input id="firstname" type="text" class="form-control validate" name="firstname" value="<%=data.firstname%>" required>
         <label for="firstname">First Name</label>
       </div>
       
@@ -17,18 +17,18 @@
     </div>
 
       <div class="form-group">
-        <input id="email" type="email" class="form-control validate" name="email" value="<%=data.email%>">
+        <input id="email" type="email" class="form-control validate" name="email" value="<%=data.email%>" required>
         <label for="email">Email</label>
       </div>
    
 
       <div class="form-group">
-        <input id="password" type="password" class="form-control validate" name="password">
+        <input id="password" type="password" class="form-control validate" name="password" required>
         <label for="password">Password</label>
       </div>
 
       <div class="form-group">
-        <input id="ver_password" type="password" class="form-control validate" name="ver_password">
+        <input id="ver_password" type="password" class="form-control validate" name="ver_password" required>
         <label for="ver_password">Verify Password</label>
       </div>
 

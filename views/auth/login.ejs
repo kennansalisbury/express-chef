@@ -1,14 +1,16 @@
+
+
 <div class="d-flex flex-column justify-content-around align-items-center bgimage-home">
     <div class="card bg-light col-5 border-light m-2 p-3">
         <h1>Log in with Email</h1>
 
         <form method="POST" action="/auth/login"> 
             <div class="form-group">         
-                <input id="email" type="email" class="validate" name="email">
+                <input id="email" type="email" class="validate" name="email" required>
                 <label for="email">Email</label>
             </div>  
             <div class="form-group"> 
-                <input id="password" type="password" class="validate" name="password">
+                <input id="password" type="password" class="validate" name="password" required>
                 <label for="password">Password</label>
             </div>
         
