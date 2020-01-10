@@ -35,9 +35,9 @@ The chef express user wants:
 ## APPROACH
 1. Created wireframes, UX flow & User Stories
 ![sketch](./static/img/sketch.JPG)
-![models](./static/img/models.jpg)
 
 2. Brainstormed Models and Routes
+![models](./static/img/models.jpg)
 
 ### Final Routes
 | Method | Path | Location | Purpose |
