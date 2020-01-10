@@ -48,9 +48,12 @@
 
 
 <div class="row">
-    <div class="col-sm one-recipe-img">
-        <img class="img-fluid p-2" src="<%=recipe.imageUrl%>">
-    </div>
+    
+    <% if(recipe.imageUrl) {%>
+        <div class="col-sm one-recipe-img">
+            <img class="img-fluid p-2" src="<%=recipe.imageUrl%>">
+        </div>
+    <%}%>
 
     <div class="col-8 ingredients">
         <h4>Ingredients</h4>
@@ -58,9 +61,11 @@
             <% let ingredients = JSON.parse(recipe.ingredientsObj) %>
             <% ingredients.forEach(ingredient => {%>
                 <p><%=ingredient.text%></p>
-        <%})%>
+            <%})%>
+        <%} else if (recipe.sourceUrl) {%>
+              <p>No ingredients available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source ? recipe.source : "info unavailable" %></a> for more information.</p>
         <%} else {%>
-            <p>No ingredients available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source %></a> for more information.</p>
+                <p>No ingredients available.</p>
         <%}%>
     </div>    
 </div>
@@ -74,9 +79,10 @@
         <%})%>
     <%} else if (recipe.instructionsText != "null") {%>
         <p><%=recipe.instructionsText%></p>
-
+    <%} else if (recipe.sourceUrl) {%>
+            <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source ? recipe.source : "info unavailable" %></a> for more information.</p>
     <%} else {%>
-        <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source != "null" ? recipe.source : "info unavailable" %></a> for more information.</p>
+            <p>No instructions available.</p>
     <%}%>
 
 </div>

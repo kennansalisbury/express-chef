@@ -1,109 +1,131 @@
-<% let cookPrepTime = recipe.totalTime ? recipe.totalTime : time %>
+<% let cookPrepTime = recipe.totalTime ? Math.floor(recipe.totalTime) : Math.floor(time) %>
 
 <div class="bg-light recipe-background">
-<h1><%= recipe.label %></h1>
-<h3 class="source"><a class="text-info" href="<%= recipe.url %>" target="_blank"><%= recipe.source %></a></h3>
 
-<ul class="list-group list-group-horizontal mb-3">
-    <li class="list-group-item">
-    <% for (let x=0; x < recipe.yield; x++) {%>
-            <i class="fas fa-user"></i>
-            <%}%>
-        Serves <strong><%=recipe.yield%></strong> ppl
-    </li>
-  <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= cookPrepTime %></strong> minutes</li>
-  <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
-</ul>
+  <h1><%= recipe.label %></h1>
 
-
-<div class="row">
-    <div class="col-sm one-recipe-img">
-        <img class="img-fluid p-2" src="<%=recipe.image %>">
-    </div>
-
-    <div class="col-8 ingredients">
-        <h4>Ingredients</h4>
-        <% if(recipe.ingredients.length) {%>
-          <% recipe.ingredients.forEach(ingredient => {%>
-              <p><%=ingredient.text%></p>
-          <%})%>
-        <%} else {%>
-            <p>No ingredients available, please visit <a href="<%=recipe.url%>" target="_blank"><%= recipe.source %></a> for more information.</p>
-        <%}%>
-
-    </div>    
-</div>
-
-<div class="container">
-    <h4>Instructions</h4>
-    <% if(instructionsObj.length) {%>
-      <% instructionsObj[0].steps.forEach(step => {%>
-          <p><%=step.number%>. <%=step.step%></p>
-      <%})%>
-    <%} else if (!instructionsObj.length && instructionsText) {%>
-        <p><%=instructionsText%></p>
+  <h3 class="source">
+    <%if (recipe.url){%>
+    <a class="text-info" href="<%= recipe.url %>" target="_blank"><%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %></a>
     <%} else {%>
-        <p>No instructions available, please visit <a href="<%=recipe.url%>" target="_blank"><%= recipe.source %></a> for more information.</p>
+      <%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %>
     <%}%>
-</div>
+  </h3>
+  
+  <ul class="list-group list-group-horizontal mb-3">
+    <%if (recipe.yield){%>
+      <li class="list-group-item">
+      <% for (let x=0; x < recipe.yield; x++) {%>
+              <i class="fas fa-user"></i>
+              <%}%>
+          Serves <strong><%=recipe.yield%></strong> ppl
+      </li>
+    <%}%>
+
+    <%if (recipe.cookPrepTime && recipe.cookPrepTime != 0){%>
+      <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= cookPrepTime %></strong> minutes</li>
+    <%}%>
+
+    <%if (recipe.calories){%>
+      <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
+    <%}%>
+  </ul>
 
 
-
-
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#saveRecipeModal">
-  Save Recipe
-</button>
-
-<div class="modal fade" id="saveRecipeModal" tabindex="-1" role="dialog" aria-labelledby="saveRecipeModalTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="saveRecipeModalTitle">How would you like to categorize this recipe?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="row">
+    <%if (recipe.image){%>
+      <div class="col-sm one-recipe-img">
+          <img class="img-fluid p-2" src="<%=recipe.image %>">
       </div>
-      <div class="modal-body">
-        <form id="save-form" method="POST" action="/recipes">
-            <input type="hidden" name="title" value="<%= recipe.label ? recipe.label : "null" %>">
-            <input type="hidden" name="source" value="<%= recipe.source ? recipe.source : "null" %>">
-            <input type="hidden" name="sourceUrl" value="<%= recipe.url ? recipe.url : "null" %>">
-            <input type="hidden" name="imageUrl" value="<%= recipe.image ? recipe.image : "null" %>">
-            <input type="hidden" name="time" value="<%= cookPrepTime ? Math.ceil(cookPrepTime) : 0 %>">
-            <input type="hidden" name="servings" value="<%= recipe.yield ? Math.floor(recipe.yield) : 0 %>">
-            <input type="hidden" name="ingredients" value="<%= recipe.ingredients.length ? JSON.stringify(recipe.ingredients) : "null" %>">
-            <input type="hidden" name="instructionsText" value="<%= instructionsText ? instructionsText : "null" %>">
-            <input type="hidden" name="instructions" value="<%= instructionsObj.length ? JSON.stringify(instructionsObj) : "null" %>">
-            <input type="hidden" name="types" value="<%= types.length ? JSON.stringify(types) : "null" %>">
-            <input type="hidden" name="diet" value="<%= recipe.dietLabels.length ? JSON.stringify(recipe.dietLabels) : "null" %>">
-            <input type="hidden" name="health" value="<%= recipe.healthLabels.length ? JSON.stringify(recipe.healthLabels.length) : "null" %>">
-            <input type="hidden" name="calories" value="<%= recipe.calories ? Math.ceil(recipe.calories) : 0 %>">
+      <%}%>
 
-            <div id="add-categories">
-                
-                <% if (categories.length) {%>
-                    <p>Choose from existing categories:</p>
-                    
-                    <% categories.forEach(category => { %>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="existing_categories" value="<%=category.name%>" id="<%=category.name%>">
-                            <label class="form-check-label" for="<%=category.name%>"><%=category.name%></label>
-                        </div>
-                    <% }) %>
+      <div class="col-8 ingredients">
+          <h4>Ingredients</h4>
+          <% if(recipe.ingredients.length) {%>
+            <% recipe.ingredients.forEach(ingredient => {%>
+                <p><%=ingredient.text%></p>
+            <%})%>
+          <%} else if (recipe.url) {%>
+              <p>No ingredients available, please visit <a href="<%=recipe.url%>" target="_blank"><%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %></a> for more information.</p>
+          <%} else {%>
+                <p>No ingredients available.</p>
+          <%}%>
 
-                <%} else {%>
-                <p><i>You don't have any categories stored yet, start by adding below!</i></p>
-                <%}%>
-                <br>
-                <label>Add new categories, separated by commas:</label>
-                <textarea class="form-control" name="new_categories" placeholder="i.e. breakfast, lunch, spicy, tailgate, etc. "></textarea>
-                <br>
-            </div>
+      </div>    
+  </div>
 
-            <input type="submit" id="submit-btn" class="btn btn-danger" value="Save Recipe">
-        </form>
+  <div class="container">
+      <h4>Instructions</h4>
+      <% if(instructionsObj.length) {%>
+        <% instructionsObj[0].steps.forEach(step => {%>
+            <p><%=step.number%>. <%=step.step%></p>
+        <%})%>
+      <%} else if (!instructionsObj.length && instructionsText) {%>
+          <p><%=instructionsText%></p>
+      <%} else if (recipe.url) {%>
+          <p>No instructions available, please visit <a href="<%=recipe.url%>" target="_blank"><%= recipe.source ? recipe.source : "info unavailable" %></a> for more information.</p>
+      <%} else {%>
+        <p>No instructions available.</p>
+      <%}%>
+  </div>
+
+
+
+
+  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#saveRecipeModal">
+    Save Recipe
+  </button>
+
+  <div class="modal fade" id="saveRecipeModal" tabindex="-1" role="dialog" aria-labelledby="saveRecipeModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="saveRecipeModalTitle">How would you like to categorize this recipe?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="save-form" method="POST" action="/recipes">
+              <input type="hidden" name="title" value="<%= recipe.label ? recipe.label : "null" %>">
+              <input type="hidden" name="source" value="<%= recipe.source ? recipe.source : "null" %>">
+              <input type="hidden" name="sourceUrl" value="<%= recipe.url ? recipe.url : "null" %>">
+              <input type="hidden" name="imageUrl" value="<%= recipe.image ? recipe.image : "null" %>">
+              <input type="hidden" name="time" value="<%= cookPrepTime ? Math.ceil(cookPrepTime) : 0 %>">
+              <input type="hidden" name="servings" value="<%= recipe.yield ? Math.floor(recipe.yield) : 0 %>">
+              <input type="hidden" name="ingredients" value="<%= recipe.ingredients.length ? JSON.stringify(recipe.ingredients) : "null" %>">
+              <input type="hidden" name="instructionsText" value="<%= instructionsText ? instructionsText : "null" %>">
+              <input type="hidden" name="instructions" value="<%= instructionsObj.length ? JSON.stringify(instructionsObj) : "null" %>">
+              <input type="hidden" name="types" value="<%= types.length ? JSON.stringify(types) : "null" %>">
+              <input type="hidden" name="diet" value="<%= recipe.dietLabels.length ? JSON.stringify(recipe.dietLabels) : "null" %>">
+              <input type="hidden" name="health" value="<%= recipe.healthLabels.length ? JSON.stringify(recipe.healthLabels.length) : "null" %>">
+              <input type="hidden" name="calories" value="<%= recipe.calories ? Math.ceil(recipe.calories) : 0 %>">
+
+              <div id="add-categories">
+                  
+                  <% if (categories.length) {%>
+                      <p>Choose from existing categories:</p>
+                      
+                      <% categories.forEach(category => { %>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" name="existing_categories" value="<%=category.name%>" id="<%=category.name%>">
+                              <label class="form-check-label" for="<%=category.name%>"><%=category.name%></label>
+                          </div>
+                      <% }) %>
+
+                  <%} else {%>
+                  <p><i>You don't have any categories stored yet, start by adding below!</i></p>
+                  <%}%>
+                  <br>
+                  <label>Add new categories, separated by commas:</label>
+                  <textarea class="form-control" name="new_categories" placeholder="i.e. breakfast, lunch, spicy, tailgate, etc. "></textarea>
+                  <br>
+              </div>
+
+              <input type="submit" id="submit-btn" class="btn btn-danger" value="Save Recipe">
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

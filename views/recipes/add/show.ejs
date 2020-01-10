@@ -6,51 +6,64 @@
 <p>Here's what we found. Click save if you'd like to save to your saved recipes.</p>
 
 <div class="bg-light recipe-background">
-  <h1><%= recipe.title != "null" ? recipe.title : "info unavailable" %></h1>
+  <h1><%= recipe.title %></h1>
 
+  <h3 class="source">
+    <%if (recipe.sourceUrl){%>
+    <a class="text-info" href="<%= recipe.sourceUrl %>" target="_blank"><%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %></a></h3>
+    <%} else {%>
+      <%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %>
+    <%}%>
+      
 
-  <h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>" target="_blank"><%= recipe.source != "null" ? recipe.source : "info unavailable" %></a></h3>
 
 <ul class="list-group list-group-horizontal mb-3">
     
-
+  <%if (recipe.servings){%>
   <li class="list-group-item">
     <% for (let x=0; x < recipe.servings; x++) {%>
           <i class="fas fa-user"></i>
           <%}%>
       Serves <strong><%=recipe.servings%></strong> ppl
   </li>
+  <%}%>
 
-  
-  <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= recipe.time %></strong> minutes</li>
+  <%if (recipe.time && recipe.time != 0){%>
+    <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= recipe.time %></strong> minutes</li>
+  <%}%>
 </ul>
 
 
 <div class="row">
+  <%if (recipe.imageUrl){%>
     <div class="col-sm one-recipe-img">
         <img class="img-fluid p-2" src="<%=recipe.imageUrl %>">
     </div>
+  <%}%>
 
-    <div class="col-8 ingredients">
-        <h4>Ingredients</h4>
-        <% if(recipe.ingredientsObj.length) {%>
-          <% recipe.ingredientsObj.forEach(ingredient => {%>
-              <p><%=ingredient.text%></p>
-          <%})%>
-        <%} else {%>
-            <p>No ingredients available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source %></a> for more information.</p>
-        <%}%>
-
-    </div>    
+  <div class="col-8 ingredients">
+      <h4>Ingredients</h4>
+      <% if(recipe.ingredientsObj.length) {%>
+        <% recipe.ingredientsObj.forEach(ingredient => {%>
+            <p><%=ingredient.text%></p>
+        <%})%>
+      <%} else if (recipe.sourceUrl) {%>
+        <p>No ingredients available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %></a> for more information.</p>
+      <%} else {%>
+        <p>No ingredients available.</p>
+      <%}%>
+  </div>    
 </div>
 
 <div class="container">
     <h4>Instructions</h4>
     <% if (recipe.instructionsText) {%>
         <p><%=recipe.instructionsText%></p>
-    <%} else {%>
-        <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source %></a> for more information.</p>
-    <%}%>
+      <%} else if (recipe.sourceUrl) {%>
+        <p>No instructions available, please visit <a href="<%=recipe.sourceUrl%>" target="_blank"><%= recipe.source && recipe.source != "null" ? recipe.source : "info unavailable" %></a> for more information.</p>
+      <%} else {%>
+        <p>No instructions available.</p>
+      <%}%>
 </div>
 
 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#saveRecipeModal">
