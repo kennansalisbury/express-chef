@@ -12,9 +12,9 @@
             
       
         <a href="/categories/<%=category.id%>">
-            <div class="card bg-light text-white col-3 border-light m-2" style="max-width: 300px; min-width: 300px; min-height: 300px;">
+            <div class="card bg-secondary text-white border-light m-2" style="max-width: 300px; min-width: 300px; min-height: 300px;">
                 <%if(category.recipes.length){%>
-                    <img src="<%=category.recipes[randomRecipe].imageUrl%>" class="card-img" alt="sample-recipe-image" style="max-width: 300px;">
+                    <img src="<%=category.recipes[randomRecipe].imageUrl%>" class="card-img" alt="sample-recipe-image" style="min-width: 300px;">
                 <%}%>
                 <div class="card-img-overlay d-flex flex-column justify-content-center">
                     <h1 class="card-title bg-dark text-center"><%=category.name%></h1>
