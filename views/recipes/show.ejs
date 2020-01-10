@@ -11,17 +11,32 @@
     </form>
 </div>
 
-<h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>" target="_blank"><%= recipe.source != 'null' ? recipe.source : "info unavailable" %></a></h3>
+<%if(recipe.sourceUrl != 'null'){%>
+    <h3 class="source"><a class="text-info" href="<%= recipe.sourceUrl %>" target="_blank"><%= recipe.source != 'null' ? recipe.source : "info unavailable" %></a></h3>
+<%} else {%>
+    <h3 class="source"><%= recipe.source != 'null' ? recipe.source : "info unavailable" %></h3>
+<%}%>
+
 
 <ul class="list-group list-group-horizontal mb-3">
-    <li class="list-group-item">
-    <% for (let x=0; x < recipe.servings; x++) {%>
-            <i class="fas fa-user"></i>
-            <%}%>
-        Serves <strong><%=recipe.servings%></strong> ppl
-    </li>
-  <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= recipe.time %></strong> minutes</li>
-  <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
+    
+    <%if(recipe.servings != 0){%>
+        <li class="list-group-item">
+            <% for (let x=0; x < recipe.servings; x++) {%>
+                    <i class="fas fa-user"></i>
+                    <%}%>
+                Serves <strong><%=recipe.servings%></strong> ppl
+            </li>
+    <%}%>
+
+    <%if(recipe.time != 0){%>
+        <li class="list-group-item"><i class="fas fa-clock"></i> Ready in <strong><%= recipe.time %></strong> minutes</li>
+    <%}%>
+
+    <%if(recipe.calories != 0){%>
+        <li class="list-group-item"><i class="fas fa-heart"></i><strong> <%=Math.floor(recipe.calories)%></strong> calories</li>
+    <%}%>
+  
   <% if(categories.length) {%>
     <li class="list-group-item"> <i class="fas fa-folder"></i> Categories: 
         <%categories.forEach(category => {%>
@@ -34,7 +49,7 @@
 
 <div class="row">
     <div class="col-sm one-recipe-img">
-        <img class="img-fluid p-2" src="<%=recipe.imageUrl %>">
+        <img class="img-fluid p-2" src="<%=recipe.imageUrl%>">
     </div>
 
     <div class="col-8 ingredients">

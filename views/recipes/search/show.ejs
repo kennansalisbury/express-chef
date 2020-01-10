@@ -69,15 +69,15 @@
             <input type="hidden" name="source" value="<%= recipe.source ? recipe.source : 'null' %>">
             <input type="hidden" name="sourceUrl" value="<%= recipe.url ? recipe.url : 'null' %>">
             <input type="hidden" name="imageUrl" value="<%= recipe.image ? recipe.image : 'null' %>">
-            <input type="hidden" name="time" value="<%= cookPrepTime ? Math.ceil(cookPrepTime) : 'null' %>">
-            <input type="hidden" name="servings" value="<%= recipe.yield ? Math.floor(recipe.yield) : 'null' %>">
+            <input type="hidden" name="time" value="<%= cookPrepTime ? Math.ceil(cookPrepTime) : 0 %>">
+            <input type="hidden" name="servings" value="<%= recipe.yield ? Math.floor(recipe.yield) : 0 %>">
             <input type="hidden" name="ingredients" value="<%= recipe.ingredients.length ? JSON.stringify(recipe.ingredients) : 'null' %>">
             <input type="hidden" name="instructionsText" value="<%= instructionsText ? instructionsText : 'null' %>">
             <input type="hidden" name="instructions" value="<%= instructionsObj.length ? JSON.stringify(instructionsObj) : 'null' %>">
             <input type="hidden" name="types" value="<%= types.length ? JSON.stringify(types) : 'null' %>">
             <input type="hidden" name="diet" value="<%= recipe.dietLabels.length ? JSON.stringify(recipe.dietLabels) : 'null' %>">
             <input type="hidden" name="health" value="<%= recipe.healthLabels.length ? JSON.stringify(recipe.healthLabels.length) : 'null' %>">
-            <input type="hidden" name="calories" value="<%= recipe.calories ? Math.ceil(recipe.calories) : 'null' %>">
+            <input type="hidden" name="calories" value="<%= recipe.calories ? Math.ceil(recipe.calories) : 0 %>">
 
             <div id="add-categories">
                 

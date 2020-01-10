@@ -142,8 +142,6 @@ router.post('/', isLoggedIn, (req, res) => {
         categories = categories.concat(newCategories)
     }
 
-
-    //FOR TESTING - NEED UPDATED USER ID
     const findOrCreateCategories = (categories, recipe, wasCreated, req, res) => {
 
         if(categories.length){
@@ -343,10 +341,9 @@ router.get('/:id', isLoggedIn, (req, res) => {
 router.delete('/:id', isLoggedIn, (req, res) => {
 
     // delete from user_savedrecipes join table
-    db.user_savedrecipes.destroy({
+    db.recipe.destroy({
         where: {
-            userId: req.user.id,
-            recipeId: req.params.id
+            id: req.params.id
         }
     }).then(destroyedRecipeRows => {
         console.log(destroyedRecipeRows + '🌈🌈🌈🌈')
