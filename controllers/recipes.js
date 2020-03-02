@@ -1,14 +1,17 @@
+//*** DRY CODE UPDATES: consolidate to spoonacular api only
+
+
 let axios = require('axios')
 let router = require('express').Router()
 let db = require('../models')
 let async = require('async')
-let cloudinary = require('cloudinary')
+
 
 //middleware to confirm user logged in
 let isLoggedIn = require('../middleware/isLoggedIn')
 
 
-// GET /recipes/search - 1st page user sees when logged in, search recipes (api)
+// GET: /recipes/search - shows search bar for searching recipes
 router.get('/search', isLoggedIn, (req, res) => {
     res.render('recipes/search/main.ejs')
 })
@@ -19,31 +22,23 @@ router.get('/search/results', isLoggedIn, (req, res) => {
     
     axios.get(`https://api.edamam.com/search?q=${q}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
     .then(response => {
-        // res.send(response.data.hits)
         res.render('recipes/search/index.ejs', {recipes: response.data.hits, search: req.query.search})
     })
     .catch(err => {
         console.log(err)
         res.render('error')
     })
-
-    // res.render('recipes/search/index.ejs', {recipes: null})
 })
 
 // GET /recipes/search/result - show 1 selected search result from API
 router.get('/search/result', isLoggedIn, (req, res) => {
     let r = encodeURIComponent(req.query.url)
 
-    console.log(`🥥🥥🥥🥥 https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
-
     //get recipe data to show from edamam
     axios.get(`https://api.edamam.com/search?r=${r}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`)
     .then(response => {
-        // console.log(response.data[0])
        
         let edamamRecipeUrl = response.data[0].url
-
-        console.log(`🥥🥥🥥🥥 https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
         
         //put recipe URL through spoonacular api to recieve instructions
         axios.get(`https://api.spoonacular.com/recipes/extract?url=${edamamRecipeUrl}&apiKey=${process.env.SPOON_API_KEY}`)
@@ -80,7 +75,7 @@ router.get('/search/result', isLoggedIn, (req, res) => {
 
 })
 
-// GET /recipes/add - show input URL to extract recipe
+// GET /recipes/add - show search input for URL to extract recipe
 router.get('/add', isLoggedIn, (req, res) => {
     res.render('recipes/add/new')
 })
@@ -128,7 +123,7 @@ router.get('/add/result', isLoggedIn, (req, res) => {
         })
 })
 
-//POST /recipes - save a recipe to db
+//POST /recipes - save a recipe
 router.post('/', isLoggedIn, (req, res) => {
     let categories = []
     
@@ -142,6 +137,7 @@ router.post('/', isLoggedIn, (req, res) => {
         categories = categories.concat(newCategories)
     }
 
+    //helper function for adding categories to a recipe
     const findOrCreateCategories = (categories, recipe, wasCreated, req, res) => {
 
         if(categories.length){
@@ -150,7 +146,6 @@ router.post('/', isLoggedIn, (req, res) => {
                     where: {
                         name: c.trim().toLowerCase(),
                         userId: req.user.id}
-                        // userId: 2 }
                 })
                 .then(([category, wasCreated]) => {
                     recipe.addCategory(category)
@@ -170,7 +165,7 @@ router.post('/', isLoggedIn, (req, res) => {
         }
     }
 
-
+    //**DRY CODE UPDATE - why did I not use findorcreate?
     // find or create recipe
     db.recipe.findOne({
         where: {
@@ -201,7 +196,6 @@ router.post('/', isLoggedIn, (req, res) => {
                 //add user associations
 
                 db.user.findByPk(req.user.id)
-                // db.user.findByPk(2)
                 .then(user => {
                     user.addRecipe(newRecipe)
                 })
@@ -210,7 +204,6 @@ router.post('/', isLoggedIn, (req, res) => {
                     res.render('error')
                 })
                 let wasCreated = true
-                //findorcreate categories
                 findOrCreateCategories(categories, newRecipe, wasCreated, req, res)
 
             })
@@ -219,20 +212,16 @@ router.post('/', isLoggedIn, (req, res) => {
                 res.render('error')
             })
         } else {
-            //else (recipe does exist) - check if associated with current user
+            //else (if recipe does exist) - check if associated with current user
             let wasCreated
 
             recipe.hasUser(req.user.id)
-            // recipe.hasUser(2)
             .then(hasUser => {
-                
-
                 //if not associated with current user - add user associations
                 if(!hasUser){
                     wasCreated = true
 
                     db.user.findByPk(req.user.id)
-                    // db.user.findByPk(2)
                     .then(user => {
                         user.addRecipe(recipe)
                     })
@@ -245,7 +234,6 @@ router.post('/', isLoggedIn, (req, res) => {
                 }
 
                 //whether associated with user or not, findorcreate categories
-
                 findOrCreateCategories(categories, recipe, wasCreated, req, res)
 
             })
@@ -260,6 +248,7 @@ router.post('/', isLoggedIn, (req, res) => {
     })
 })
 
+//***CODE UPDATE: feel like I need to update this query so that i'm just getting recipes associated with current user
 //GET /recipes - show all saved recipes
 router.get('/', isLoggedIn, (req, res) => {
 
@@ -267,7 +256,6 @@ router.get('/', isLoggedIn, (req, res) => {
         include: [{
             model: db.user, 
             where: {id: req.user.id}
-            // where: {id: 2}
         }],
     })
     .then(recipes => {
@@ -295,9 +283,7 @@ router.get('/:id', isLoggedIn, (req, res) => {
     .then(recipe => {
         
         //if connected to current user, show - else, show error page
-
         recipe.hasUser(req.user.id)
-        // recipe.hasUser(2)
         .then(hasUser => {
             if(hasUser) {
                 //if user associated with recipe, check each category for user and push to new array if associated with current user
@@ -307,7 +293,6 @@ router.get('/:id', isLoggedIn, (req, res) => {
                         where: {
                             id: c.id,
                             userId: req.user.id
-                            // userId: 2
                         }
                     })
                     .then(category => {
@@ -346,15 +331,12 @@ router.delete('/:id', isLoggedIn, (req, res) => {
             id: req.params.id
         }
     }).then(destroyedRecipeRows => {
-        console.log(destroyedRecipeRows + '🌈🌈🌈🌈')
-        
         //find all categories associated with current user
         db.category.findAll({
             where: {userId: req.user.id}
         })
         .then(categories => {
             //delete from recipe_categories table where recipeId = req.params.id and categoryId = categoryid associated with current user
-            console.log(categories + '🐳🐳🐳🐳')
             async.forEach(categories, (c, done) => {
                 db.recipes_categories.destroy({
                     where: {
@@ -363,7 +345,6 @@ router.delete('/:id', isLoggedIn, (req, res) => {
                     }
                 })
                 .then(destroyedJoinRows => {
-                    console.log(destroyedJoinRows + '☀️☀️☀️☀️')
                     done()
                 })
                 .catch(done)

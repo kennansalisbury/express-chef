@@ -2,7 +2,6 @@
 let router = require('express').Router()
 let db = require('../models')
 let passport = require('../config/passportConfig')
-let cloudinary = require('cloudinary')
 
 // Define routes
 router.get('/login', (req, res) => {
@@ -28,10 +27,9 @@ router.post('/signup', (req, res, next) => {
             where: {email: req.body.email},
             defaults: req.body
         })
-        .then(([user, wasCreated]) => { //confirms if new user was created or not
+        .then(([user, wasCreated]) => { 
             if(wasCreated) {
-                // this is the intended user action
-                // automatically log in the user to their newly created account
+                // if user was created,automatically log in to their newly created account
                 passport.authenticate('local', {
                     successRedirect: '/profile/home',
                     failureRedirect: '/auth/login',
@@ -69,7 +67,7 @@ router.get('/logout', (req, res) => {
 
 // FACEBOOK LOGIN ROUTES
 
-//route that our app uses:
+//route that this app uses:
 router.get('/facebook', passport.authenticate('facebook', {
     scope: ['public_profile', 'email']
 }))
@@ -81,5 +79,4 @@ router.get('/callback/facebook', passport.authenticate('facebook', {
     failureFlash: 'Facebook login failed'
 }))
 
-// Export the router object so we can include it in other files
 module.exports = router

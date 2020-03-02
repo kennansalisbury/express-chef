@@ -4,8 +4,7 @@ module.exports =  (req, res, next) => {
         //someone is logged in, let them through
         next()  
     }
-    else { //if not a user, redirect
-        // No one is logged in. Redirect
+    else { //if no one is logged in, redirect
         req.flash('error', 'You must be logged in to view this page')
         res.redirect('/auth/login')
     }

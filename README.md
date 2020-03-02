@@ -32,12 +32,10 @@ The chef express user wants:
 * API calls - Axios
 * Deployment - heroku
 
-## APPROACH
 1. Created wireframes, UX flow & User Stories
 ![sketch](./static/img/sketch.JPG)
 
-2. Brainstormed Models and Routes
-![models](./static/img/models.jpg)
+2. Brainstormed Routes and Models
 
 ### Final Routes
 | Method | Path | Location | Purpose |

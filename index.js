@@ -1,5 +1,5 @@
 // Required node modules
-require('dotenv').config() //provide access to variables inside .env files
+require('dotenv').config()
 let express = require('express')
 let layouts = require('express-ejs-layouts')
 let flash = require('connect-flash')
@@ -7,7 +7,7 @@ let session = require('express-session')
 let cloudinary = require('cloudinary')
 let methodOverride = require('method-override')
 
-// Declare express app varaiable
+// Declare express app variable
 let app = express()
 
 let passport = require('./config/passportConfig')
@@ -21,14 +21,14 @@ app.use(express.urlencoded({extended: false}))
 app.use(session({
     secret: process.env.SESSION_SECRET
 }))
-app.use(flash()) //depends on session; must come after app.use session statement
-app.use(passport.initialize()) //depends on session; must come after app.use session statement
-app.use(passport.session()) //depends on session; must come after app.use session statement
+app.use(flash())
+app.use(passport.initialize()) 
+app.use(passport.session()) 
 
 // Custom middleware: Add variables to locals for each page
 app.use((req, res, next) => {
-    res.locals.alerts = req.flash() //allows flash/alert data on every page
-    res.locals.user = req.user //allows user data on every page
+    res.locals.alerts = req.flash() //allow flash/alert data on every page
+    res.locals.user = req.user //allow user data on every page
     next()
 })
 
@@ -40,8 +40,6 @@ app.use('/categories', require('./controllers/categories'))
 
 // Add home or catch-all routes
 app.get('/', (req, res) => {
-    // let backgroundImg = cloudinary.url('sample.jpg')
-    // res.render('home', {backgroundImg})
     if(!req.user){
         res.render('home')
     } else {
@@ -49,12 +47,12 @@ app.get('/', (req, res) => {
     }
 })
 
-//error route - ALWAYS THE BOTTOM ROUTE
+// error/catch-all route
 app.get('*', (req, res) => {
     res.render('error')
 })
 
 // Listen on local port
-app.listen(process.env.PORT || 3000, () => { //process.env.PORT is for when pushing to production the server will automatically generate a port in env file to use
+app.listen(process.env.PORT || 3000, () => { 
     console.log('👂🏻👂🏻👂🏻👂🏻')
 })

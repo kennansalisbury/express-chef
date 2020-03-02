@@ -1,3 +1,5 @@
+/* CODE UPDATES - work on background image load time & overall responsiveness */
+
 .bg-img-home {
     height: 100vh;
     background: repeat center/100% url(https://res.cloudinary.com/ksalisbury/image/upload/v1578538654/lukas-blazek-f-TWhXOrLiU-unsplash_wqqym5.jpg);
@@ -8,13 +10,6 @@
     height:100vh;
     background: repeat center/100% url(../img/bg-solid.png);
 }
-
-/* .bgimage-home {
-    height: 100vh;
-    width: 100vw;
-    background: repeat center/300% url(https://res.cloudinary.com/ksalisbury/image/upload/v1578538654/lukas-blazek-f-TWhXOrLiU-unsplash_wqqym5.jpg);
-
-} */
 
 .recipe-background {
     border-radius: 1%;
