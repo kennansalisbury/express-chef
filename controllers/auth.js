@@ -8,6 +8,10 @@ router.get('/login', (req, res) => {
     res.render('auth/login')
 })
 
+router.get('/login/:id', (req, res) => {
+    res.render('auth/login', {email: "juliachild@gmail.com", password: "password"})
+})
+
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/profile/home',
     failureRedirect: '/auth/login',
