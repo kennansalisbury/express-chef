@@ -5,7 +5,7 @@ let passport = require('../config/passportConfig')
 
 // Define routes
 router.get('/login', (req, res) => {
-    res.render('auth/login')
+    res.render('auth/login', {email: '', password: ''})
 })
 
 router.get('/login/:id', (req, res) => {
